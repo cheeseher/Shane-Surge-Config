@@ -1,0 +1,11 @@
+.DS_Store
+*.log
+output/
+
+# 任何真实订阅、节点凭据和本地覆写文件都不得提交
+*订阅链接*
+*.private.conf
+*.local.conf
+.env
+.env.*
+

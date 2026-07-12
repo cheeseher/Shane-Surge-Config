@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#FAF9F5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#141413" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="data:,">
+  <title>Shane Surge 三端稳定配置</title>
+  <!--
+    主题与受众：Shane 在回国前部署 iPhone、iPad 和 MacBook 的 Surge 托管配置。
+    唯一任务：安装同一个 Managed Profile URL，用 Linked Profile 保留 Amy 本地凭据并完成通话验证。
+    视觉主张：像一张温暖、安静的网络运维工作纸，以步骤和决策表为主。
+    有理由的风险：用一块深色“回国后先做”面板作为唯一视觉锚点，强化凭据安全顺序。
+  -->
+  <style>
+    :root {
+      color-scheme: light dark;
+      --ivory: #FAF9F5;
+      --paper: #FFFFFF;
+      --ink: #141413;
+      --clay: #D97757;
+      --clay-deep: #B85C3E;
+      --oat: #E3DACC;
+      --olive: #788C5D;
+      --rust: #B04A3F;
+      --blue: #6A9BCC;
+      --gray-100: #F0EEE6;
+      --gray-200: #E8E6DC;
+      --gray-300: #D1CFC5;
+      --gray-500: #77766F;
+      --gray-700: #3D3D3A;
+      --bg: var(--ivory);
+      --surface: var(--paper);
+      --surface-subtle: var(--gray-100);
+      --surface-strong: var(--ink);
+      --text: var(--ink);
+      --text-muted: var(--gray-700);
+      --text-faint: var(--gray-500);
+      --text-on-strong: var(--ivory);
+      --text-on-accent: var(--ink);
+      --border-color: var(--gray-300);
+      --accent: var(--clay);
+      --accent-strong: var(--clay-deep);
+      --success: var(--olive);
+      --danger: var(--rust);
+      --info: var(--blue);
+      --warm-subtle: var(--oat);
+      --slate: var(--text);
+      --white: var(--surface);
+      --serif: "Songti SC", "STSong", "Noto Serif SC", "Source Han Serif SC", "SimSun", ui-serif, Georgia, serif;
+      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+      --mono: "SF Mono", "SFMono-Regular", ui-monospace, Menlo, Monaco, Consolas, monospace;
+      --space-1: .25rem;
+      --space-2: .5rem;
+      --space-3: .75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --radius-row: .5rem;
+      --radius-panel: .75rem;
+      --radius-card: .875rem;
+      --border: 1.5px solid var(--border-color);
+      --shadow-lift: 0 8px 24px rgb(20 20 19 / .06);
+      --measure: 68ch;
+      --page: 1080px;
+      --control-h: 44px;
+      --control-px: 16px;
+      --control-radius: 10px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #141413;
+        --surface: #1C1C1B;
+        --surface-subtle: #252523;
+        --surface-strong: #F0EEE6;
+        --text: #FAF9F5;
+        --text-muted: #C4C3BD;
+        --text-faint: #A4A39C;
+        --text-on-strong: #141413;
+        --text-on-accent: #141413;
+        --border-color: #42423F;
+        --accent: #E18A6B;
+        --accent-strong: #F0A184;
+        --success: #95A979;
+        --danger: #D36D62;
+        --info: #8DB4D4;
+        --warm-subtle: #3A3530;
+        --shadow-lift: 0 8px 24px rgb(0 0 0 / .2);
+      }
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      padding: 48px 24px 96px;
+      background: var(--bg);
+      color: var(--text);
+      font: 1rem/1.72 var(--sans);
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    p, li { max-width: var(--measure); }
+    h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 500; text-wrap: balance; }
+    h1 { max-width: 760px; font-size: clamp(2.25rem, 6vw, 4.5rem); line-height: 1.05; letter-spacing: -.035em; }
+    h2 { font-size: clamp(1.55rem, 3vw, 2.15rem); line-height: 1.16; }
+    h3 { font-size: 1.16rem; line-height: 1.3; }
+    code, .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+    code { overflow-wrap: anywhere; }
+    :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+    .page { width: min(100%, var(--page)); margin-inline: auto; }
+    .eyebrow { margin: 0 0 var(--space-4); color: var(--accent-strong); font: 700 .78rem/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .lede { max-width: 62ch; margin: var(--space-5) 0 0; color: var(--text-muted); font-size: 1.08rem; }
+    .header-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: var(--space-6); }
+    .chip { display: inline-flex; align-items: center; min-height: 30px; padding: 4px 10px; border: var(--border); border-radius: 999px; background: var(--surface); color: var(--text-muted); font: 650 .78rem/1 var(--sans); }
+    .chip[data-tone="ok"] { color: var(--success); border-color: color-mix(in srgb, var(--success) 50%, var(--border-color)); }
+    .chip[data-tone="warn"] { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 50%, var(--border-color)); }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: var(--space-6); }
+    .btn { min-height: var(--control-h); display: inline-flex; align-items: center; justify-content: center; padding: 0 var(--control-px); border: 1.5px solid transparent; border-radius: var(--control-radius); font: 650 .875rem/1 var(--sans); text-decoration: none; transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease; }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary { background: var(--accent); color: var(--text-on-accent); border-color: var(--accent); }
+    .btn-primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+    .btn-secondary { background: var(--surface); color: var(--text); border-color: var(--border-color); }
+    .btn-secondary:hover { background: var(--surface-subtle); }
+    .layout { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: var(--space-10); margin-top: var(--space-12); align-items: start; }
+    .toc { position: sticky; top: 20px; padding: 8px; border: var(--border); border-radius: var(--radius-panel); background: var(--surface); }
+    .toc a { min-height: 40px; display: flex; align-items: center; padding: 6px 10px; border-radius: var(--radius-row); color: var(--text-muted); font-size: .875rem; font-weight: 600; text-decoration: none; }
+    .toc a:hover { background: var(--surface-subtle); color: var(--text); }
+    main { min-width: 0; }
+    section { scroll-margin-top: 24px; }
+    section + section { margin-top: var(--space-10); }
+    .section-head { margin-bottom: var(--space-5); }
+    .section-head p { margin: 8px 0 0; color: var(--text-muted); }
+    .priority-panel { padding: clamp(22px, 5vw, 38px); border-radius: var(--radius-card); background: #20201E; color: #FAF9F5; box-shadow: var(--shadow-lift); }
+    .priority-panel .eyebrow { color: #EAA086; }
+    .priority-panel h2 { color: #FAF9F5; }
+    .priority-panel ol { margin: var(--space-6) 0 0; padding-left: 1.4rem; }
+    .priority-panel li { padding: 5px 0 5px 6px; color: #D8D6CE; }
+    .priority-panel strong { color: #FFFFFF; }
+    .callout { padding: var(--space-5); border: var(--border); border-radius: var(--radius-panel); background: var(--surface); }
+    .callout[data-tone="warn"] { border-left: 4px solid var(--danger); }
+    .callout[data-tone="info"] { border-left: 4px solid var(--info); }
+    .callout p { margin: 8px 0 0; color: var(--text-muted); }
+    .url-box { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; margin-top: var(--space-5); padding: 10px; border: var(--border); border-radius: var(--radius-panel); background: var(--surface); }
+    .url-box code { display: block; min-width: 0; padding: 8px 10px; color: var(--accent-strong); font-size: .82rem; line-height: 1.5; }
+    .copy-status { min-height: 1.5em; margin: 8px 2px 0; color: var(--success); font-size: .82rem; }
+    .subhead { margin: var(--space-8) 0 var(--space-4); }
+    .two-col { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .plain-list { margin: 10px 0 0; padding-left: 1.25rem; color: var(--text-muted); }
+    .plain-list li + li { margin-top: 5px; }
+    .metric-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+    .metric { padding: 14px; border: var(--border); border-radius: var(--radius-panel); background: var(--surface-subtle); }
+    .metric strong { display: block; color: var(--accent-strong); font: 700 1.15rem/1.2 var(--mono); }
+    .metric span { display: block; margin-top: 4px; color: var(--text-muted); font-size: .78rem; }
+    .flow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .flow-step { position: relative; padding: var(--space-5); border: var(--border); border-radius: var(--radius-panel); background: var(--surface); }
+    .flow-step:not(:last-child)::after { content: "→"; position: absolute; top: 50%; right: -20px; z-index: 2; width: 28px; color: var(--accent-strong); text-align: center; font: 700 1.1rem/1 var(--mono); transform: translateY(-50%); }
+    .flow-step .mono { color: var(--accent-strong); font-size: .75rem; letter-spacing: .06em; }
+    .flow-step h3 { margin-top: 10px; }
+    .flow-step p { margin: 8px 0 0; color: var(--text-muted); font-size: .9rem; line-height: 1.58; }
+    .table-wrap { overflow-x: auto; border: var(--border); border-radius: var(--radius-panel); background: var(--surface); }
+    table { width: 100%; min-width: 650px; border-collapse: collapse; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid var(--border-color); text-align: left; vertical-align: top; }
+    th { background: var(--surface-subtle); color: var(--text-muted); font-size: .78rem; letter-spacing: .04em; }
+    td { font-size: .92rem; }
+    tr:last-child td { border-bottom: 0; }
+    td:nth-child(2) { color: var(--accent-strong); font-weight: 700; }
+    .checklist { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; counter-reset: steps; }
+    .checklist li { counter-increment: steps; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: start; max-width: none; padding: 15px; border: var(--border); border-radius: var(--radius-panel); background: var(--surface); }
+    .checklist li::before { content: counter(steps, decimal-leading-zero); color: var(--accent-strong); font: 700 .78rem/34px var(--mono); text-align: center; border-radius: 50%; background: var(--surface-subtle); }
+    details { border: var(--border); border-radius: var(--radius-panel); background: var(--surface); }
+    details + details { margin-top: 10px; }
+    summary { min-height: 52px; display: flex; align-items: center; padding: 10px 16px; cursor: pointer; font-weight: 700; }
+    details p, details ul { margin: 0; padding: 0 16px 16px; color: var(--text-muted); }
+    details ul { padding-left: 34px; }
+    footer { margin-top: var(--space-12); padding-top: var(--space-6); border-top: var(--border); color: var(--text-faint); font-size: .82rem; }
+    footer p { margin: 0; }
+    @media (max-width: 820px) {
+      body { padding: 32px 14px 72px; }
+      .layout { grid-template-columns: 1fr; gap: var(--space-8); }
+      .toc { position: static; display: flex; gap: 4px; overflow-x: auto; padding: 6px; }
+      .toc a { white-space: nowrap; }
+      .flow { grid-template-columns: 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+      .flow-step:not(:last-child)::after { content: "↓"; top: auto; right: 50%; bottom: -22px; transform: translateX(50%); }
+    }
+    @media (max-width: 520px) {
+      .actions { align-items: stretch; flex-direction: column; }
+      .actions .btn { width: 100%; }
+      .url-box { grid-template-columns: 1fr; }
+      .url-box .btn { width: 100%; }
+      .metric-strip { grid-template-columns: 1fr; }
+      .header-meta { gap: 6px; }
+      .chip { font-size: .72rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <p class="eyebrow">Surge · China Stable · 2026-07-13</p>
+      <h1>一个链接，三台设备持续更新</h1>
+      <p class="lede">GitHub Managed Profile 负责远程更新，Linked Profile 只在本地保存 Amy 非托管 URL。Telegram 和 Zoom 使用通话专用单节点出口逻辑，不在会话中分路。</p>
+      <div class="header-meta" aria-label="配置状态">
+        <span class="chip" data-tone="ok">Surge 语法校验通过</span>
+        <span class="chip" data-tone="ok">Managed + Linked 架构已就绪</span>
+        <span class="chip" data-tone="ok">公开仓库已发布</span>
+      </div>
+      <div class="actions">
+        <a class="btn btn-primary" href="https://raw.githubusercontent.com/cheeseher/Shane-Surge-Config/main/By-Shane.conf">查看源配置</a>
+        <a class="btn btn-secondary" href="https://github.com/cheeseher/Shane-Surge-Config#readme">阅读完整手册</a>
+      </div>
+    </header>
+
+    <div class="layout">
+      <nav class="toc" aria-label="页内导航">
+        <a href="#first">回国后先做</a>
+        <a href="#install">安装链接</a>
+        <a href="#architecture">配置架构</a>
+        <a href="#deploy">三端部署</a>
+        <a href="#policy">默认策略</a>
+        <a href="#telegram">Telegram</a>
+        <a href="#zoom">Zoom</a>
+        <a href="#limits">已知限制</a>
+      </nav>
+
+      <main>
+        <section id="first" class="priority-panel">
+          <p class="eyebrow">Priority / Security first</p>
+          <h2>回国后先做这四件事</h2>
+          <ol>
+            <li><strong>重置 Amy 订阅凭据</strong>，废弃曾出现在截图中的旧链接。</li>
+            <li><strong>关闭其他 VPN/代理</strong>，使用中国大陆本地网络拉取 Amy 非托管订阅。</li>
+            <li><strong>用公开 URL 安装 Managed Profile</strong>，随后选择 Create Linked Profile。</li>
+            <li><strong>仅在 Linked Profile 覆写 Amy URL</strong>，然后更新资源并测试 UDP。</li>
+          </ol>
+        </section>
+
+        <section id="install">
+          <div class="section-head">
+            <h2>唯一安装链接</h2>
+            <p>三台设备都输入这一条 URL。Amy 非托管订阅不要粘贴到 GitHub，也不要写进这条远程配置。</p>
+          </div>
+          <div class="url-box">
+            <code id="managed-url">https://raw.githubusercontent.com/cheeseher/Shane-Surge-Config/main/By-Shane.conf</code>
+            <button class="btn btn-primary" id="copy-url" type="button">复制安装链接</button>
+          </div>
+          <p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
+          <div class="callout" data-tone="warn">
+            <h3>不要直接编辑 Managed Profile</h3>
+            <p>Managed Profile 是远程只读层。下载后应创建 Linked Profile，只在 Linked Profile 里把 <code>AMY_SUBSCRIPTION_URL</code> 占位值替换为新的 Amy 非托管链接。</p>
+          </div>
+        </section>
+
+        <section id="architecture">
+          <div class="section-head">
+            <h2>配置架构</h2>
+            <p>节点、配置和设备各自只承担一种职责。</p>
+          </div>
+          <div class="flow" aria-label="配置数据流">
+            <article class="flow-step">
+              <span class="mono">01 / MANAGED</span>
+              <h3>GitHub 公开托管层</h3>
+              <p>控制 DNS、策略组、分流和通话路由，每 24 小时检查更新。</p>
+            </article>
+            <article class="flow-step">
+              <span class="mono">02 / LINKED</span>
+              <h3>本地 Amy 覆写层</h3>
+              <p>仅保存 Amy 非托管 URL，远程更新不覆盖，也不上传 GitHub。</p>
+            </article>
+            <article class="flow-step">
+              <span class="mono">03 / DEVICES</span>
+              <h3>三端同一份本地副本</h3>
+              <p>三端关联同一 Managed Profile，策略名、默认选择和更新节奏一致。</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="deploy">
+          <div class="section-head">
+            <h2>部署顺序</h2>
+            <p>先在 Mac 完成验证，再同步至 iPhone 和 iPad。</p>
+          </div>
+          <ol class="checklist">
+            <li><span>Mac：Surge → Profiles → Download Profile from URL，粘贴上方唯一链接，确认它被识别为 Managed Profile。</span></li>
+            <li><span>Mac：对该配置选择 Create Linked Profile；只在关联层将 <code>AMY_SUBSCRIPTION_URL</code> 替换为新的 Amy 非托管 URL。</span></li>
+            <li><span>重载配置，确认五个地区 Smart Group 都有节点，且没有“流量/到期”伪节点。</span></li>
+            <li><span>执行“外部资源 → 全部更新”，确认公开规则集无红色错误。</span></li>
+            <li><span>用 Surge UDP Relay Test 测试香港和新加坡节点；全部失败时禁止宣称 Telegram 语音已稳定。</span></li>
+            <li><span>Mac 开启 `Set as System Proxy + Enhanced Mode`，验证浏览器、终端、Git 和 Docker。</span></li>
+            <li><span>iPhone：Surge → 配置列表 → 从 URL 下载；建立 Linked Profile，只覆写同一个 Amy URL，然后选中关联配置。</span></li>
+            <li><span>iPad：重复 iPhone 步骤。即使通过 iCloud 同步，也要检查当前选中的是 Linked Profile，且外部节点能正常更新。</span></li>
+          </ol>
+          <div class="callout" data-tone="info" style="margin-top: 12px;">
+            <h3>以后更新不必重新导入</h3>
+            <p>GitHub 推送新配置后，在 Surge 的 Managed Profile 页面点“立即更新”，或等待 24 小时检查周期。Linked Profile 内的 Amy URL 与本地策略选择不会被远程更新覆盖。</p>
+          </div>
+        </section>
+
+        <section id="policy">
+          <div class="section-head">
+            <h2>默认策略</h2>
+            <p>平衡模式：保留必要的业务组，不把界面做成策略组墙。</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>策略组</th><th>初始选择</th><th>决策理由</th></tr></thead>
+              <tbody>
+                <tr><td>节点选择</td><td>香港节点</td><td>大陆日常低延迟</td></tr>
+                <tr><td>人工智能</td><td>美国节点</td><td>ChatGPT、Claude、Copilot 出口一致</td></tr>
+                <tr><td>谷歌服务</td><td>日本节点</td><td>Google 与 Gemini 使用同一出口</td></tr>
+                <tr><td>电报消息</td><td>新加坡通话</td><td>单实际节点，小波动不换线</td></tr>
+                <tr><td>国际媒体</td><td>美国节点</td><td>美区流媒体优先</td></tr>
+                <tr><td>TikTok</td><td>日本节点</td><td>只做 IP 分流，不做 MITM 换区</td></tr>
+                <tr><td>Zoom会议</td><td>DIRECT</td><td>TCP/UDP 同一出口，不拆分音频与投屏</td></tr>
+                <tr><td>开发服务</td><td>香港节点</td><td>GitHub 与开发资源低延迟</td></tr>
+                <tr><td>苹果 / 微软 / 群晖</td><td>DIRECT</td><td>账户地区不等于全部流量必须代理</td></tr>
+                <tr><td>加密货币</td><td>DIRECT</td><td>不自动伪装地区或切换 IP</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="telegram">
+          <div class="section-head">
+            <h2>Telegram：稳定语音配置</h2>
+            <p>目标是让消息、建连和通话媒体使用同一个实际节点，并避免 P2P 对端 IP 落入其他策略。</p>
+          </div>
+          <div class="two-col">
+            <div class="callout" data-tone="info">
+              <h3>Surge 内选择</h3>
+              <p><code>电报消息 → 新加坡通话</code>。这是一个低频评估的单节点出口；通话期间不要手动测速、更新节点或切换策略。</p>
+            </div>
+            <div class="callout" data-tone="warn">
+              <h3>Telegram 三端必做</h3>
+              <p><code>Settings → Privacy and Security → Calls → Peer-to-Peer → Nobody</code>。关闭 P2P 后通话经 Telegram 中继，隐藏双方 IP，但可能轻微增加延迟。</p>
+            </div>
+          </div>
+          <h3 class="subhead">上线前测试，按顺序做</h3>
+          <ol class="checklist">
+            <li><span>Surge 中分别对候选香港、新加坡节点执行 Proxy UDP Relay Test；至少一个节点必须通过。</span></li>
+            <li><span>发送文字、图片和语音消息，确认请求全部命中 <code>电报消息</code>，没有 DIRECT 或 FINAL 异常分流。</span></li>
+            <li><span>进行 10–15 分钟双向语音：双方轮流静音、开麦，保持屏幕锁定 2 分钟，再恢复前台。</span></li>
+            <li><span>分别在家庭 Wi‑Fi 和中国电信蜂窝网络测试。切换网络时允许通话重连，但切换后必须恢复双向声音。</span></li>
+          </ol>
+          <h3 class="subhead">故障对照</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>现象</th><th>先检查</th><th>处理</th></tr></thead>
+              <tbody>
+                <tr><td>呼叫一直连接中或很快断开</td><td>UDP Relay Test</td><td>切到另一个已通过 UDP 的香港/新加坡通话组；都失败则联系 Amy，规则无法补出 UDP 能力。</td></tr>
+                <tr><td>偶发单向无声</td><td>三端 P2P 是否均为 Nobody</td><td>确认双方 Telegram 设置；检查通话期间是否切节点、更新订阅或在 Wi‑Fi/蜂窝之间切换。</td></tr>
+                <tr><td>Mac 正常，iPhone/iPad 不稳</td><td>iOS 当前配置与 VPN 状态</td><td>确认选中 Linked Profile、没有另一个 VPN，并在 Surge 请求日志确认 Telegram 没落入 FINAL。</td></tr>
+                <tr><td>Wi‑Fi 正常，蜂窝失败</td><td>中国电信 UDP 与节点路径</td><td>用同一节点重复 UDP 测试；不要用自动切组掩盖运营商路径差异。</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="zoom">
+          <div class="section-head">
+            <h2>Zoom：语音、视频与共享屏幕</h2>
+            <p>整个会议统一走 <code>Zoom会议</code>；默认 DIRECT，只有实测直连质量差时才把整组切到香港通话。</p>
+          </div>
+          <div class="callout" data-tone="info">
+            <h3>为什么不能只代理一部分</h3>
+            <p>旧配置可能让登录 TCP、媒体 UDP 与直接 IP 连接走不同出口。新配置用 Mac 进程规则、Zoom 域名和官方 Meetings/Webinars IP 范围，让语音、视频、共享屏幕与 TURN 连接进入同一策略组。</p>
+          </div>
+          <h3 class="subhead">Mac 会前设置</h3>
+          <ul class="plain-list">
+            <li>Surge 开启 <code>Set as System Proxy</code> 与 <code>Enhanced Mode</code>，确保 Zoom 的 UDP 与直接 IP 媒体连接被接管。</li>
+            <li><code>Zoom会议</code> 先保持 DIRECT；关闭其他 VPN、代理和可能接管网络的安全软件。</li>
+            <li>先进入 Zoom 测试会议，检查麦克风、扬声器和摄像头，再开始正式会议。</li>
+            <li>共享带声音的网页或视频时，在 Share Screen 面板勾选 <strong>Share sound / 共享声音</strong>；这不是 Surge 分流选项。</li>
+          </ul>
+          <h3 class="subhead">20 分钟验收脚本</h3>
+          <ol class="checklist">
+            <li><span>前 5 分钟双方连续对话，轮流静音、取消静音；确认双方都能持续听见。</span></li>
+            <li><span>开启摄像头 5 分钟，同时观察画面、声音和 Surge 请求是否仍全部命中 <code>Zoom会议</code>。</span></li>
+            <li><span>共享整个桌面 5 分钟；再共享一段有声音的视频并勾选 Share sound，确认对方能同时看见和听见。</span></li>
+            <li><span>停止共享后再次共享 2 次，最后保持语音 5 分钟，确认不会出现投屏后单向无声。</span></li>
+          </ol>
+          <h3 class="subhead">Zoom Statistics 建议门槛</h3>
+          <p>会议中点击视频按钮旁的箭头 → Video Settings → Statistics。Zoom 官方建议以下三项控制在门槛内：</p>
+          <div class="metric-strip" aria-label="Zoom 网络质量建议值">
+            <div class="metric"><strong>≤ 150 ms</strong><span>Latency / 延迟</span></div>
+            <div class="metric"><strong>≤ 40 ms</strong><span>Jitter / 抖动</span></div>
+            <div class="metric"><strong>≤ 2%</strong><span>Packet Loss / 丢包</span></div>
+          </div>
+          <h3 class="subhead">故障对照</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>现象</th><th>判断</th><th>处理</th></tr></thead>
+              <tbody>
+                <tr><td>投屏后对方听不到共享内容</td><td>通常不是网络分流</td><td>重新共享并勾选 Share sound；若只是麦克风无声，再检查 Zoom 输入设备与系统麦克风权限。</td></tr>
+                <tr><td>双方偶发听不到彼此</td><td>先看 Statistics</td><td>若延迟、抖动或丢包超标，把整个 <code>Zoom会议</code> 从 DIRECT 切到香港通话后重新入会；不要只改单条 UDP 规则。</td></tr>
+                <tr><td>共享屏幕时明显卡顿</td><td>上行带宽或 Wi‑Fi 干扰</td><td>靠近路由器、切 5/6 GHz 或有线网络，暂停云同步；不要边开会边测速。</td></tr>
+                <tr><td>切到代理反而更差</td><td>代理绕路或节点拥塞</td><td>恢复 DIRECT。稳定优先于“必须代理”，以同一测试脚本和 Statistics 数据做决定。</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="limits">
+          <div class="section-head">
+            <h2>已知限制与边界</h2>
+            <p>已确认与待回国确认的事项分开记录。</p>
+          </div>
+          <details open>
+            <summary>为什么不默认开 MITM？</summary>
+            <p>域名分流、Smart Group 和轻量广告拦截不需要 MITM。大量 App 有证书锁定，全局信任自签 CA 只会增加兼容性和安全风险。</p>
+          </details>
+          <details>
+            <summary>为什么要新建公开分发仓库？</summary>
+            <p>Surge 无法匿名访问私有 Raw 文件，而将现有 MyProxy 改为公开会暴露历史提交。新的公开仓库只发布已扫描的 Managed Profile，不包含 Amy URL 或个人化历史。</p>
+          </details>
+          <details>
+            <summary>测试系统如何影响判断？</summary>
+            <p>iOS 27 和 macOS 27 都是测试系统。若出现切换 Wi-Fi/蜂窝后断网、发热或网络扩展异常，需用同一配置与稳定系统交叉测试，不将所有问题归因于规则。</p>
+          </details>
+          <details>
+            <summary>加密货币策略的边界</summary>
+            <p>默认 DIRECT。本配置不判断你的居住地、账户资格或平台条款，也不建议用切换出口的方式规避地区限制。</p>
+          </details>
+        </section>
+      </main>
+    </div>
+
+    <footer>
+      <p><span class="mono">Managed Profile + Linked Profile</span> · GitHub 只发布规则与策略，真实 Amy 凭据仅保存在 Surge 本地覆写层。</p>
+    </footer>
+  </div>
+  <script>
+    const copyButton = document.querySelector('#copy-url');
+    const copyStatus = document.querySelector('#copy-status');
+    copyButton?.addEventListener('click', async () => {
+      const value = document.querySelector('#managed-url')?.textContent?.trim() || '';
+      try {
+        await navigator.clipboard.writeText(value);
+        copyStatus.textContent = '已复制。请在 Surge 的“从 URL 下载配置”中粘贴。';
+      } catch {
+        copyStatus.textContent = '浏览器未允许自动复制，请长按或选中上方链接复制。';
+      }
+    });
+  </script>
+</body>
+</html>
