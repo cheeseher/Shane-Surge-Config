@@ -20,6 +20,8 @@
 - [使用来自代理服务商的线路](https://kb.nssurge.com/surge-knowledge-base/zh/guidelines/proxy-provider)
 - [External Policy Group](https://manual.nssurge.com/policy-group/policy-including.html)
 - [Smart Group](https://kb.nssurge.com/surge-knowledge-base/guidelines/smart-group)
+- [Surge HTTP API：当前与近期连接](https://manual.nssurge.com/others/http-api.html)
+- [PROTOCOL：TCP、UDP、QUIC、STUN](https://manual.nssurge.com/rule/misc-rule.html)
 - [UDP 不支持时的失败行为](https://manual.nssurge.com/others/misc-options.html)
 - [Zoom 官方网络端口与 IP 范围](https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0060548)
 - [Telegram 通话的 P2P / reflector 协议](https://core.telegram.org/api/end-to-end/video-calls)
@@ -130,14 +132,24 @@ https://cheeseher.github.io/Shane-Surge-Config/
 
 ## 可选监测模块
 
-四个模块均可在[中文说明页的模块区](https://cheeseher.github.io/Shane-Surge-Config/#modules)一键安装或复制 URL：
+五个模块均可在[中文说明页的模块区](https://cheeseher.github.io/Shane-Surge-Config/#modules)一键安装或复制 URL：
 
-- `AI 连通性监测`：检查 ChatGPT、Claude、Grok、Gemini。
+- `AI 连通性监测`：检查 ChatGPT、Claude、Grok、Gemini、GitHub。
 - `订阅流量余额`：通过 DIRECT 读取服务商的 `subscription-userinfo` 响应头；真实订阅 URL 仅填在各设备模块参数中。
 - `媒体连通性监测`：检查 Netflix、YouTube、Disney+、Prime Video、Max、TikTok 的基础可达性。
+- `Telegram 与 Zoom 通话健康`：读取当前和最近约 20 分钟真实连接，显示 UDP/TCP 路径、基础连通性及当前策略出口。
 - `Shane-Surge 操作手册`：刷新 Panel 后尝试发送可点击通知，在浏览器打开最新说明页；Panel 结果也会显示手册 URL 作为兜底。
 
 Information Panel 由 Surge 官方标注为 iOS 功能，因此 Panel 界面主要面向 iPhone/iPad。模块测试结果表示网络连通性，不等于账号资格、片库或地区权益保证。
+
+### Telegram / Zoom 通话健康模块怎么用
+
+1. 先建立真实 Telegram 语音或 Zoom 会议并保持 10–20 秒，不要先结束通话。
+2. 通话继续在后台运行时切回 Surge，刷新“通话健康”。
+3. `UDP + TCP` 或 `UDP 活跃` 表示已观察到 UDP 媒体路径；`仅见 TCP` 可能是尚未进入媒体阶段，也可能发生回退，需要保持通话后复测；`等待通话数据` 不是失败，只表示近期连接里没有足够样本。
+4. 同时核对出口：Telegram 通常应为 `新加坡通话`；Zoom 在中国大陆通常先使用 `DIRECT`。
+
+该模块使用 Surge 官方 HTTP API 读取当前与近期连接，只分析真实流量，不伪造 UDP 测试，也不能代替双方开麦、静音、锁屏、共享屏幕的完整验收。出现 `连接异常`、持续 `仅见 TCP` 或单向无声时，再执行 Proxy UDP Relay Test 并按后文故障表处理。
 
 ### 操作手册刷新后没有通知
 

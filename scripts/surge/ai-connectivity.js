@@ -3,6 +3,7 @@ const services = [
   { name: "Claude", url: "https://claude.ai/cdn-cgi/trace", policy: "人工智能" },
   { name: "Grok", url: "https://grok.com/cdn-cgi/trace", policy: "人工智能" },
   { name: "Gemini", url: "https://gemini.google.com/", policy: "谷歌服务" },
+  { name: "GitHub", url: "https://api.github.com/zen", policy: "开发服务" },
 ];
 
 const nameWidth = 12;

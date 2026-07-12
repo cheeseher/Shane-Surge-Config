@@ -1,0 +1,9 @@
+#!name=Telegram 与 Zoom 通话健康
+#!desc=读取 Surge 当前及近期真实连接，显示 Telegram、Zoom 是否检测到 UDP/TCP 媒体路径、基础连通性与当前策略出口。请在实际通话中刷新；结果用于排障，不承诺绝对不断线。
+#!category=Shane-Surge
+
+[Panel]
+通话健康 = title="Telegram / Zoom 通话健康", content="开始通话并保持 10–20 秒\n返回 Surge 后点击刷新", icon=phone.fill, icon-color=#6A9BCC, script-name=Shane 通话健康, update-interval=30
+
+[Script]
+Shane 通话健康 = type=generic, script-path=https://raw.githubusercontent.com/cheeseher/Shane-Surge-Config/main/scripts/surge/call-health.js?v=20260713-call1, script-update-interval=86400, timeout=20

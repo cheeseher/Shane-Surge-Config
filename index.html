@@ -279,7 +279,7 @@
           <h1>Shane-Surge 配置说明</h1>
         </div>
       </div>
-      <p class="lede">iPhone、iPad 与 MacBook 共用的中文操作手册。这里集中说明配置安装、四个实用模块、每个策略组怎么选，以及 Surge 里哪些开关该开、哪些不该开。</p>
+      <p class="lede">iPhone、iPad 与 MacBook 共用的中文操作手册。这里集中说明配置安装、五个实用模块、每个策略组怎么选，以及 Surge 里哪些开关该开、哪些不该开。</p>
       <div class="header-meta" aria-label="配置状态">
         <span class="chip" data-tone="ok">Surge 语法校验通过</span>
         <span class="chip" data-tone="ok">Managed + Linked 架构已就绪</span>
@@ -297,7 +297,7 @@
         <a href="#install">安装链接</a>
         <a href="#architecture">配置架构</a>
         <a href="#deploy">三端部署</a>
-        <a href="#modules">四个模块</a>
+        <a href="#modules">五个模块</a>
         <a href="#policy">策略组说明</a>
         <a href="#switches">开关建议</a>
         <a href="#telegram">Telegram</a>
@@ -380,15 +380,15 @@
 
         <section id="modules">
           <div class="section-head">
-            <h2>四个实用模块</h2>
-            <p>模块与 Managed Profile 相互独立：配置更新不会删除模块。Information Panel 由 Surge 官方标注为 iOS 功能，因此下面四项主要供 iPhone/iPad 使用；Mac 可安装脚本，但不保证出现同样的 Panel 界面。</p>
+            <h2>五个实用模块</h2>
+            <p>模块与 Managed Profile 相互独立：配置更新不会删除模块。Information Panel 由 Surge 官方标注为 iOS 功能，因此下面五项主要供 iPhone/iPad 使用；Mac 可安装脚本，但不保证出现同样的 Panel 界面。</p>
           </div>
           <div class="module-list">
             <article class="module-row">
               <div>
                 <p class="module-kicker">01 / CONNECTIVITY</p>
                 <h3>AI 连通性监测</h3>
-                <p>分别通过 <code>人工智能</code> 和 <code>谷歌服务</code> 策略检测 ChatGPT、Claude、Grok、Gemini，显示成功数量和请求延迟。</p>
+                <p>分别通过 <code>人工智能</code>、<code>谷歌服务</code> 和 <code>开发服务</code> 策略检测 ChatGPT、Claude、Grok、Gemini、GitHub，显示成功数量和请求延迟。</p>
                 <code class="module-url" id="module-ai-url">https://raw.githubusercontent.com/cheeseher/Shane-Surge-Config/main/modules/ai-connectivity.sgmodule</code>
               </div>
               <div class="module-actions">
@@ -422,7 +422,19 @@
             </article>
             <article class="module-row">
               <div>
-                <p class="module-kicker">04 / MANUAL</p>
+                <p class="module-kicker">04 / CALL HEALTH</p>
+                <h3>Telegram / Zoom 通话健康</h3>
+                <p>读取 Surge 当前及最近 20 分钟的真实连接，区分 UDP 与 TCP，显示基础连通性、当前策略出口和通话路径风险。应在实际通话保持 10–20 秒后刷新。</p>
+                <code class="module-url" id="module-call-url">https://raw.githubusercontent.com/cheeseher/Shane-Surge-Config/main/modules/call-health.sgmodule</code>
+              </div>
+              <div class="module-actions">
+                <a class="btn btn-primary" href="surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcheeseher%2FShane-Surge-Config%2Fmain%2Fmodules%2Fcall-health.sgmodule">用 Surge 安装</a>
+                <button class="btn btn-secondary copy-btn" type="button" data-copy-target="#module-call-url">复制 URL</button>
+              </div>
+            </article>
+            <article class="module-row">
+              <div>
+                <p class="module-kicker">05 / MANUAL</p>
                 <h3>Shane-Surge 操作手册</h3>
                 <p>在策略页面显示手册入口。点 Panel 的刷新按钮后，Surge 会尝试发送“打开手册”通知；Panel 结果同时显示完整网址，通知被系统拦截时仍可复制打开。</p>
                 <code class="module-url" id="module-manual-url">https://raw.githubusercontent.com/cheeseher/Shane-Surge-Config/main/modules/operation-manual.sgmodule</code>
@@ -447,6 +459,21 @@
           <div class="callout" data-tone="warn" style="margin-top: 12px;">
             <h3>订阅流量模块还要多做一步</h3>
             <p>安装后进入 <strong>模块 → 订阅流量余额 → 参数设置</strong>，在 <code>SUBSCRIPTION_URL</code> 后粘贴完整的 Amy 非托管订阅链接并保存。三台设备分别填写；不要把填好后的参数截图、分享或提交到 GitHub。若服务商没有返回标准流量响应头，模块会明确显示“无法读取”，不会猜测余额。</p>
+          </div>
+          <div class="steps-panel" style="margin-top: 12px;">
+            <h3>通话健康模块：什么时候刷新，怎么看</h3>
+            <ol class="plain-list">
+              <li>先在 Telegram 或 Zoom 建立真实语音/会议，保持 10–20 秒，不要先结束通话。</li>
+              <li>保持通话在后台运行，切回 Surge 的策略页面刷新“通话健康”。模块读取当前和最近约 20 分钟的连接。</li>
+              <li>同时确认模块显示的出口符合预期：Telegram 通常为“新加坡通话”，Zoom 在中国大陆通常先用 <code>DIRECT</code>。</li>
+            </ol>
+            <div class="settings-list" style="margin-top: 12px;">
+              <div class="setting-row"><div class="setting-name">UDP + TCP / UDP 活跃</div><div class="setting-state">较理想</div><div class="setting-note">已经观察到 UDP 媒体路径；TCP 通常承担登录、信令或消息。仍需完成双方开麦、静音和共享屏幕实测。</div></div>
+              <div class="setting-row"><div class="setting-name">仅见 TCP</div><div class="setting-state">需确认</div><div class="setting-note">可能只是尚未进入通话，也可能媒体回退到 TCP。保持通话更久后再刷新；若持续如此且有单向无声，应检查 UDP Relay。</div></div>
+              <div class="setting-row"><div class="setting-name">等待通话数据</div><div class="setting-state">尚未采集</div><div class="setting-note">基础网站可达，但最近连接中没有识别到 Telegram/Zoom 通话；这不是失败结论。</div></div>
+              <div class="setting-row"><div class="setting-name">连接异常</div><div class="setting-state">需要处理</div><div class="setting-note">最近流量出现失败、拒绝或超时，或基础连接失败。先检查当前出口、其他 VPN 和代理节点 UDP 能力。</div></div>
+            </div>
+            <p style="margin-top: 12px;">模块不能代替一场真实双向通话，也不能保证“永不掉线”。它的价值是把以前看不见的协议路径、出口和失败记录变成可读结果，帮助定位单向无声究竟是不是 UDP/分流问题。</p>
           </div>
           <div class="two-col" style="margin-top: 12px;">
             <div class="callout" data-tone="info">
@@ -536,7 +563,7 @@
             <div class="setting-row"><div class="setting-name">UDP Relay</div><div class="setting-state">节点必须支持</div><div class="setting-note">不是“盲目打开”的加速开关。对香港/新加坡候选节点执行 Proxy UDP Relay Test；不支持时本配置会 REJECT，避免 Telegram/Zoom 偷跑直连。</div></div>
             <div class="setting-row"><div class="setting-name">TCP Fast Open / TFO</div><div class="setting-state">不要强制开启</div><div class="setting-note">保持系统自动或节点默认。官方说明强制 TFO 可能在路由器、防火墙或服务端不兼容时导致代理完全不可达，只有明确测试通过才考虑。</div></div>
             <div class="setting-row"><div class="setting-name">HTTP3 / QUIC</div><div class="setting-state">保持当前配置</div><div class="setting-note">本配置对代理流量使用 <code>block-quic=all-proxy</code>，让不稳定的代理 UDP/QUIC 回退到 HTTPS/TCP；不需要再叠加“全局禁 QUIC”模块。</div></div>
-            <div class="setting-row"><div class="setting-name">MITM / HTTPS 解密</div><div class="setting-state">关闭</div><div class="setting-note">这四个监测模块、分流、Telegram 和 Zoom 都不需要 MITM。不开证书、不信任自签 CA，可减少证书锁定和隐私风险。</div></div>
+            <div class="setting-row"><div class="setting-name">MITM / HTTPS 解密</div><div class="setting-state">关闭</div><div class="setting-note">这五个模块、分流、Telegram 和 Zoom 都不需要 MITM。不开证书、不信任自签 CA，可减少证书锁定和隐私风险。</div></div>
             <div class="setting-row"><div class="setting-name">Rewrite / Body Rewrite</div><div class="setting-state">无需额外开启</div><div class="setting-note">当前模块只使用 Generic Script 和 Panel，不修改 App 请求或响应。不要为了“媒体检测”安装解锁、改区或去广告重写。</div></div>
             <div class="setting-row"><div class="setting-name">IPv6</div><div class="setting-state">关闭</div><div class="setting-note">当前配置为 <code>ipv6=false</code>、<code>ipv6-vif=off</code>。在 Amy 节点和中国电信路径完成双栈验证前不要改开，避免 IPv4/IPv6 出口不一致。</div></div>
             <div class="setting-row"><div class="setting-name">Wi-Fi Assist</div><div class="setting-state">开启</div><div class="setting-note">配置已开启，Wi‑Fi 明显失效时允许蜂窝辅助。正式 Telegram/Zoom 通话时仍尽量保持网络不切换。</div></div>
