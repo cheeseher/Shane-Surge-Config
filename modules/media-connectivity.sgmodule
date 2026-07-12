@@ -3,7 +3,7 @@
 #!category=Shane-Surge
 
 [Panel]
-媒体连通性 = title="媒体连通性", content="N  Netflix       \t      --  ⚪️\n▶  YouTube       \t      --  ⚪️\n◠  Disney+       \t      --  ⚪️\n▷  Prime Video   \t      --  ⚪️\nM  Max           \t      --  ⚪️\n♪  TikTok        \t      --  ⚪️\n\n点击刷新开始检测", icon=play.tv.fill, icon-color=#6A9BCC, script-name=Shane 媒体连通性, update-interval=900
+媒体连通性 = title="媒体连通性", content="检测六项常用国际媒体服务\n点击刷新查看结果", icon=play.tv.fill, icon-color=#6A9BCC, script-name=Shane 媒体连通性, update-interval=900
 
 [Script]
-Shane 媒体连通性 = type=generic, script-path=https://raw.githubusercontent.com/cheeseher/Shane-Surge-Config/main/scripts/surge/media-connectivity.js?v=20260713-layout1, script-update-interval=86400, timeout=35
+Shane 媒体连通性 = type=generic, script-path=https://raw.githubusercontent.com/cheeseher/Shane-Surge-Config/main/scripts/surge/media-connectivity.js?v=20260713-layout2, script-update-interval=86400, timeout=35
