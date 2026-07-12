@@ -1,0 +1,9 @@
+#!name=Shane-Surge 操作手册
+#!desc=在 Surge 策略页面显示中文手册入口。点击刷新后，再点击系统通知，即可用浏览器打开最新操作说明。
+#!category=Shane-Surge
+
+[Panel]
+操作手册 = title="Shane-Surge 操作手册", content="点击刷新按钮，再点通知打开中文手册", icon=book.pages.fill, icon-color=#D97757, script-name=Shane 打开手册
+
+[Script]
+Shane 打开手册 = type=generic, script-path=https://raw.githubusercontent.com/cheeseher/Shane-Surge-Config/main/scripts/surge/open-manual.js, script-update-interval=86400, timeout=10

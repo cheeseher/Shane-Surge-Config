@@ -1,0 +1,10 @@
+#!name=订阅流量余额
+#!desc=读取服务端 subscription-userinfo 响应头，显示已用、剩余、总量与到期时间。订阅链接只保存在当前设备的模块参数中。
+#!category=Shane-Surge
+#!arguments=SUBSCRIPTION_URL=
+
+[Panel]
+订阅流量 = title="订阅流量", content="安装后编辑模块参数，填入 Amy 非托管订阅链接", icon=externaldrive.fill, icon-color=#788C5D, script-name=Shane 订阅流量, update-interval=3600
+
+[Script]
+Shane 订阅流量 = type=generic, script-path=https://raw.githubusercontent.com/cheeseher/Shane-Surge-Config/main/scripts/surge/subscription-usage.js, script-update-interval=86400, argument=url=%SUBSCRIPTION_URL%, timeout=20

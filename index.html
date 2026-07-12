@@ -6,12 +6,12 @@
   <meta name="theme-color" content="#FAF9F5" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#141413" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="data:,">
-  <title>Shane Surge 三端稳定配置</title>
+  <title>Shane-Surge 配置说明</title>
   <!--
     主题与受众：Shane 在回国前部署 iPhone、iPad 和 MacBook 的 Surge 托管配置。
     唯一任务：安装同一个 Managed Profile URL，用 Linked Profile 保留 Amy 本地凭据并完成通话验证。
     视觉主张：像一张温暖、安静的网络运维工作纸，以步骤和决策表为主。
-    有理由的风险：用一块深色“回国后先做”面板作为唯一视觉锚点，强化凭据安全顺序。
+    有理由的风险：用一块深色“回国后先做”面板作为唯一视觉锚点，强化凭据安全顺序；模块入口保持为安静的安装清单，不做营销卡片。
   -->
   <style>
     :root {
@@ -121,12 +121,14 @@
     .chip[data-tone="ok"] { color: var(--success); border-color: color-mix(in srgb, var(--success) 50%, var(--border-color)); }
     .chip[data-tone="warn"] { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 50%, var(--border-color)); }
     .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: var(--space-6); }
-    .btn { min-height: var(--control-h); display: inline-flex; align-items: center; justify-content: center; padding: 0 var(--control-px); border: 1.5px solid transparent; border-radius: var(--control-radius); font: 650 .875rem/1 var(--sans); text-decoration: none; transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease; }
+    .btn { min-height: var(--control-h); display: inline-flex; align-items: center; justify-content: center; padding: 0 var(--control-px); border: 1.5px solid transparent; border-radius: var(--control-radius); font: 650 .875rem/1 var(--sans); text-decoration: none; cursor: pointer; transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease; }
     .btn:active { transform: translateY(1px); }
     .btn-primary { background: var(--accent); color: var(--text-on-accent); border-color: var(--accent); }
     .btn-primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
     .btn-secondary { background: var(--surface); color: var(--text); border-color: var(--border-color); }
     .btn-secondary:hover { background: var(--surface-subtle); }
+    .btn-ghost { background: transparent; color: var(--text-muted); border-color: transparent; }
+    .btn-ghost:hover { background: var(--surface-subtle); color: var(--text); }
     .layout { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: var(--space-10); margin-top: var(--space-12); align-items: start; }
     .toc { position: sticky; top: 20px; padding: 8px; border: var(--border); border-radius: var(--radius-panel); background: var(--surface); }
     .toc a { min-height: 40px; display: flex; align-items: center; padding: 6px 10px; border-radius: var(--radius-row); color: var(--text-muted); font-size: .875rem; font-weight: 600; text-decoration: none; }
@@ -175,6 +177,23 @@
     .legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
     .legend span { display: inline-flex; align-items: center; gap: 7px; color: var(--text-muted); font-size: .82rem; }
     .legend .policy-icon { width: 26px; height: 26px; flex-basis: 26px; border-radius: 7px; }
+    .module-list { border: var(--border); border-radius: var(--radius-card); overflow: hidden; background: var(--surface); }
+    .module-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px; padding: 20px; align-items: center; }
+    .module-row + .module-row { border-top: 1px solid var(--border-color); }
+    .module-kicker { margin: 0 0 5px; color: var(--accent-strong); font: 700 .72rem/1.3 var(--mono); letter-spacing: .06em; }
+    .module-row h3 { font-family: var(--sans); font-weight: 750; }
+    .module-row p { margin: 7px 0 0; color: var(--text-muted); font-size: .9rem; line-height: 1.6; }
+    .module-url { display: block; max-width: 68ch; margin-top: 10px; color: var(--text-faint); font-size: .72rem; line-height: 1.45; overflow-wrap: anywhere; }
+    .module-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    .steps-panel { margin-top: 14px; padding: var(--space-5); border: var(--border); border-radius: var(--radius-panel); background: var(--surface-subtle); }
+    .steps-panel h3 { margin-bottom: 8px; }
+    .settings-list { border: var(--border); border-radius: var(--radius-card); overflow: hidden; background: var(--surface); }
+    .setting-row { display: grid; grid-template-columns: 160px 120px minmax(0, 1fr); gap: 16px; align-items: start; padding: 15px 18px; }
+    .setting-row + .setting-row { border-top: 1px solid var(--border-color); }
+    .setting-name { font-weight: 750; }
+    .setting-state { color: var(--accent-strong); font-weight: 750; }
+    .setting-note { color: var(--text-muted); font-size: .9rem; line-height: 1.58; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
     .checklist { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; counter-reset: steps; }
     .checklist li { counter-increment: steps; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: start; max-width: none; padding: 15px; border: var(--border); border-radius: var(--radius-panel); background: var(--surface); }
     .checklist li::before { content: counter(steps, decimal-leading-zero); color: var(--accent-strong); font: 700 .78rem/34px var(--mono); text-align: center; border-radius: 50%; background: var(--surface-subtle); }
@@ -192,6 +211,7 @@
       .toc a { white-space: nowrap; }
       .flow { grid-template-columns: 1fr; }
       .two-col { grid-template-columns: 1fr; }
+      .setting-row { grid-template-columns: 140px 110px minmax(0, 1fr); }
       .flow-step:not(:last-child)::after { content: "↓"; top: auto; right: 50%; bottom: -22px; transform: translateX(50%); }
     }
     @media (max-width: 520px) {
@@ -202,6 +222,11 @@
       .metric-strip { grid-template-columns: 1fr; }
       .header-meta { gap: 6px; }
       .chip { font-size: .72rem; }
+      .module-row { grid-template-columns: 1fr; padding: 17px 14px; }
+      .module-actions { justify-content: stretch; }
+      .module-actions .btn { flex: 1 1 140px; }
+      .setting-row { grid-template-columns: 1fr; gap: 4px; padding: 14px; }
+      .setting-state { margin-bottom: 3px; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
@@ -212,8 +237,8 @@
   <div class="page">
     <header>
       <p class="eyebrow">Surge · China Stable · 2026-07-13</p>
-      <h1>一个链接，三台设备持续更新</h1>
-      <p class="lede">GitHub Managed Profile 负责远程更新，Linked Profile 只在本地保存 Amy 非托管 URL。Telegram 和 Zoom 使用通话专用单节点出口逻辑，不在会话中分路。</p>
+      <h1>Shane-Surge 配置说明</h1>
+      <p class="lede">iPhone、iPad 与 MacBook 共用的中文操作手册。这里集中说明配置安装、四个实用模块、每个策略组怎么选，以及 Surge 里哪些开关该开、哪些不该开。</p>
       <div class="header-meta" aria-label="配置状态">
         <span class="chip" data-tone="ok">Surge 语法校验通过</span>
         <span class="chip" data-tone="ok">Managed + Linked 架构已就绪</span>
@@ -231,7 +256,9 @@
         <a href="#install">安装链接</a>
         <a href="#architecture">配置架构</a>
         <a href="#deploy">三端部署</a>
+        <a href="#modules">四个模块</a>
         <a href="#policy">策略组说明</a>
+        <a href="#switches">开关建议</a>
         <a href="#telegram">Telegram</a>
         <a href="#zoom">Zoom</a>
         <a href="#limits">已知限制</a>
@@ -310,6 +337,78 @@
           </div>
         </section>
 
+        <section id="modules">
+          <div class="section-head">
+            <h2>四个实用模块</h2>
+            <p>模块与 Managed Profile 相互独立：配置更新不会删除模块。Information Panel 由 Surge 官方标注为 iOS 功能，因此下面四项主要供 iPhone/iPad 使用；Mac 可安装脚本，但不保证出现同样的 Panel 界面。</p>
+          </div>
+          <div class="module-list">
+            <article class="module-row">
+              <div>
+                <p class="module-kicker">01 / CONNECTIVITY</p>
+                <h3>AI 连通性监测</h3>
+                <p>分别通过 <code>人工智能</code> 和 <code>谷歌服务</code> 策略检测 ChatGPT、Claude、Grok、Gemini，显示成功数量和请求延迟。</p>
+                <code class="module-url" id="module-ai-url">https://raw.githubusercontent.com/cheeseher/Shane-Surge-Config/main/modules/ai-connectivity.sgmodule</code>
+              </div>
+              <div class="module-actions">
+                <a class="btn btn-primary" href="surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcheeseher%2FShane-Surge-Config%2Fmain%2Fmodules%2Fai-connectivity.sgmodule">用 Surge 安装</a>
+                <button class="btn btn-secondary copy-btn" type="button" data-copy-target="#module-ai-url">复制 URL</button>
+              </div>
+            </article>
+            <article class="module-row">
+              <div>
+                <p class="module-kicker">02 / SUBSCRIPTION</p>
+                <h3>订阅流量余额</h3>
+                <p>通过 <code>DIRECT</code> 从 Amy 读取标准 <code>subscription-userinfo</code> 响应头，显示已用、剩余、总量和到期时间。真实链接只填在本机模块参数中。</p>
+                <code class="module-url" id="module-usage-url">https://raw.githubusercontent.com/cheeseher/Shane-Surge-Config/main/modules/subscription-usage.sgmodule</code>
+              </div>
+              <div class="module-actions">
+                <a class="btn btn-primary" href="surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcheeseher%2FShane-Surge-Config%2Fmain%2Fmodules%2Fsubscription-usage.sgmodule">用 Surge 安装</a>
+                <button class="btn btn-secondary copy-btn" type="button" data-copy-target="#module-usage-url">复制 URL</button>
+              </div>
+            </article>
+            <article class="module-row">
+              <div>
+                <p class="module-kicker">03 / MEDIA</p>
+                <h3>媒体连通性监测</h3>
+                <p>检测 Netflix、YouTube、Disney+、Prime Video、Max、TikTok 的基础连接与延迟。结果只表示网络可达，不冒充片库或账号权益检测。</p>
+                <code class="module-url" id="module-media-url">https://raw.githubusercontent.com/cheeseher/Shane-Surge-Config/main/modules/media-connectivity.sgmodule</code>
+              </div>
+              <div class="module-actions">
+                <a class="btn btn-primary" href="surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcheeseher%2FShane-Surge-Config%2Fmain%2Fmodules%2Fmedia-connectivity.sgmodule">用 Surge 安装</a>
+                <button class="btn btn-secondary copy-btn" type="button" data-copy-target="#module-media-url">复制 URL</button>
+              </div>
+            </article>
+            <article class="module-row">
+              <div>
+                <p class="module-kicker">04 / MANUAL</p>
+                <h3>Shane-Surge 操作手册</h3>
+                <p>在策略页面显示手册入口。点 Panel 的刷新按钮后，Surge 会发送“打开手册”通知；再点通知，即可在浏览器打开本页。</p>
+                <code class="module-url" id="module-manual-url">https://raw.githubusercontent.com/cheeseher/Shane-Surge-Config/main/modules/operation-manual.sgmodule</code>
+              </div>
+              <div class="module-actions">
+                <a class="btn btn-primary" href="surge:///install-module?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcheeseher%2FShane-Surge-Config%2Fmain%2Fmodules%2Foperation-manual.sgmodule">用 Surge 安装</a>
+                <button class="btn btn-secondary copy-btn" type="button" data-copy-target="#module-manual-url">复制 URL</button>
+              </div>
+            </article>
+          </div>
+          <p class="copy-status" id="module-copy-status" role="status" aria-live="polite"></p>
+
+          <div class="steps-panel">
+            <h3>iPhone / iPad 安装顺序</h3>
+            <ol class="plain-list">
+              <li>用 Safari 打开本页，点击模块右侧的“用 Surge 安装”。若浏览器询问是否打开 Surge，选择允许。</li>
+              <li>Surge 显示模块详情后选择安装并启用。返回策略选择页面，向下找到新 Panel。</li>
+              <li>点击 Panel 右上角刷新按钮。第一次执行会下载本仓库脚本，之后 Surge 会缓存结果。</li>
+              <li>iPhone 与 iPad 分别安装，不要假设 iCloud 已同步模块启用状态。Mac 以脚本手动运行能力为准，不把 Panel 显示作为验收条件。</li>
+            </ol>
+          </div>
+          <div class="callout" data-tone="warn" style="margin-top: 12px;">
+            <h3>订阅流量模块还要多做一步</h3>
+            <p>安装后进入 <strong>模块 → 订阅流量余额 → 参数设置</strong>，在 <code>SUBSCRIPTION_URL</code> 后粘贴完整的 Amy 非托管订阅链接并保存。三台设备分别填写；不要把填好后的参数截图、分享或提交到 GitHub。若服务商没有返回标准流量响应头，模块会明确显示“无法读取”，不会猜测余额。</p>
+          </div>
+        </section>
+
         <section id="policy">
           <div class="section-head">
             <h2>策略组是做什么的</h2>
@@ -332,22 +431,68 @@
               </tbody>
             </table>
           </div>
-          <h3 class="subhead">其余常用组的推荐初始值</h3>
+          <h3 class="subhead">每个策略组怎么选</h3>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>策略组</th><th>初始选择</th><th>用途与注意事项</th></tr></thead>
+              <thead><tr><th>策略组</th><th>最佳选择</th><th>用途与注意事项</th></tr></thead>
               <tbody>
+                <tr><td>香港节点</td><td>保持 Smart 自动</td><td>大陆日常访问通常延迟最低；适合作为默认国际出口，不用于要求固定 IP 的账号业务。</td></tr>
+                <tr><td>新加坡节点</td><td>保持 Smart 自动</td><td>Telegram、PikPak 和东南亚服务的常用备用；延迟通常略高于香港，但 UDP 路径可能更稳。</td></tr>
+                <tr><td>日本节点</td><td>保持 Smart 自动</td><td>Google、Gemini、日本媒体及日区内容；需要固定地区时再使用固定子组。</td></tr>
+                <tr><td>美国节点</td><td>保持 Smart 自动</td><td>AI 与美区媒体优先；从大陆连接延迟较高，不建议作为所有流量的默认出口。</td></tr>
+                <tr><td>台湾节点</td><td>保持 Smart 自动</td><td>只在明确需要台湾地区出口时使用；图标按项目约定显示中国国旗。</td></tr>
+                <tr><td>自动选择</td><td>仅作故障备用</td><td>跨全部地区智能选择，可能改变出口国家；不要用于 Telegram 通话、LinkedIn、TikTok 或其他敏感账号会话。</td></tr>
                 <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/route.png" alt="">节点选择</span></td><td>香港节点</td><td>未被专门规则命中的日常国际流量；大陆使用优先低延迟。</td></tr>
-                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/openai.png" alt="">人工智能</span></td><td>美国节点</td><td>ChatGPT、Claude 等统一出口；遇到地区限制先更换同地区实际节点。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/openai.png" alt="">人工智能</span></td><td>美国节点</td><td>ChatGPT、Claude、Grok 等统一出口；美国不可用时依次试日本、新加坡，不要在登录过程中频繁换国家。</td></tr>
                 <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/google.png" alt="">谷歌服务</span></td><td>日本节点</td><td>Google、Gemini 与相关登录统一出口。</td></tr>
-                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/media.png" alt="">国际媒体</span></td><td>美国节点</td><td>YouTube 与美区流媒体优先；需要其他片库时手动选对应地区。</td></tr>
-                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/linkedin.png" alt="">领英</span></td><td>固定一个实际节点</td><td>登录后减少 IP 漂移；不要选会在后台自动换线的 Smart 组。</td></tr>
-                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/tiktok.png" alt="">TikTok</span></td><td>TikTok日本固定</td><td>选择日本或美国的固定实际节点；这里只做 IP 分流，不安装修改版 App、不做 MITM。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/media.png" alt="">国际媒体</span></td><td>美国节点</td><td>Netflix、YouTube 与美区流媒体优先；日区内容改日本，新加坡/香港适合一般播放但不保证片库。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/linkedin.png" alt="">领英</span></td><td>固定香港或新加坡实际节点</td><td>登录后减少 IP 漂移；不要选会在后台自动换线的 Smart 组，除非当前实际节点已经失效。</td></tr>
+                <tr><td>TikTok日本固定</td><td>手选一条真实日本节点</td><td>用于日区 TikTok；选好后保持固定，不测速、不在使用过程中更换实际节点。</td></tr>
+                <tr><td>TikTok美国固定</td><td>手选一条真实美国节点</td><td>用于美区 TikTok；与日本固定组相同，关键是同一会话不漂移出口。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/tiktok.png" alt="">TikTok</span></td><td>TikTok日本固定</td><td>在日本与美国两个固定子组之间选择；这里只做 IP 分流，不安装修改版 App、不做 MITM。</td></tr>
                 <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/github.png" alt="">开发服务</span></td><td>香港节点</td><td>GitHub、终端和常用开发资源低延迟访问。</td></tr>
-                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/apple.png" alt="">苹果 / 微软 / 群晖</span></td><td>DIRECT</td><td>美区 Apple ID 不代表所有 Apple 流量都要代理；只有明确失败时单独切换。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/pikpak.png" alt="">PikPak</span></td><td>新加坡节点</td><td>优先新加坡，速度或登录异常时试香港；下载过程中不要切换节点。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/apple.png" alt="">苹果服务</span></td><td>DIRECT</td><td>美区 Apple ID 不代表所有 Apple 流量都要代理。仅在明确的美区内容访问失败时临时选美国节点。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/microsoft.png" alt="">微软服务</span></td><td>DIRECT</td><td>Windows、Office、Teams 登录优先直连；失败时再试香港节点，避免日常更新绕路。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/nas.png" alt="">群晖办公</span></td><td>DIRECT</td><td>本地 NAS 和公司内网优先直连。只有远程服务明确需要时才切节点，并先确认不会破坏内网访问。</td></tr>
                 <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/crypto.png" alt="">加密货币</span></td><td>DIRECT</td><td>不自动伪装地区或切换 IP；仅在平台允许的合规使用地区操作。</td></tr>
               </tbody>
             </table>
+          </div>
+        </section>
+
+        <section id="switches">
+          <div class="section-head">
+            <h2>Surge 里哪些要开，哪些不要开</h2>
+            <p>下面是这套配置的基准状态。先照表设置，再排障；不要为了“速度更快”同时打开多个实验功能。</p>
+          </div>
+          <div class="two-col">
+            <div class="callout" data-tone="info">
+              <h3>iPhone / iPad 基准</h3>
+              <p>Surge 主开关开启；iOS 的增强接管由系统 VPN 自动完成。不要同时运行其他 VPN。MITM、强制 TFO、局域网共享保持关闭。</p>
+            </div>
+            <div class="callout" data-tone="info">
+              <h3>MacBook 基准</h3>
+              <p>开启 <code>Set as System Proxy</code>；需要 Telegram、Zoom、终端与直接 IP/UDP 完整接管时，同时开启 <code>Enhanced Mode</code>。</p>
+            </div>
+          </div>
+          <h3 class="subhead">逐项开关表</h3>
+          <div class="settings-list">
+            <div class="setting-row"><div class="setting-name">Surge 主开关</div><div class="setting-state">需要代理时开启</div><div class="setting-note">iPhone/iPad 必须开启才会接管网络。测试模块也应在 Surge 已启动、策略可用时刷新。</div></div>
+            <div class="setting-row"><div class="setting-name">Set as System Proxy</div><div class="setting-state">Mac 开启</div><div class="setting-note">接管大多数遵循 macOS 系统代理的 HTTP/HTTPS App。iPhone/iPad 没有这一步。</div></div>
+            <div class="setting-row"><div class="setting-name">Enhanced Mode</div><div class="setting-state">Mac 建议开启</div><div class="setting-note">Zoom、Telegram、终端和不遵循系统代理的流量需要它。若与其他 VPN、AdGuard、Little Snitch 等发生冲突，先关闭冲突软件，不要叠加接管。</div></div>
+            <div class="setting-row"><div class="setting-name">其他 VPN</div><div class="setting-state">关闭</div><div class="setting-note">同一时间只让 Surge 接管系统 VPN/网络扩展，否则容易出现路由抢占、DNS 异常或通话断流。</div></div>
+            <div class="setting-row"><div class="setting-name">UDP Relay</div><div class="setting-state">节点必须支持</div><div class="setting-note">不是“盲目打开”的加速开关。对香港/新加坡候选节点执行 Proxy UDP Relay Test；不支持时本配置会 REJECT，避免 Telegram/Zoom 偷跑直连。</div></div>
+            <div class="setting-row"><div class="setting-name">TCP Fast Open / TFO</div><div class="setting-state">不要强制开启</div><div class="setting-note">保持系统自动或节点默认。官方说明强制 TFO 可能在路由器、防火墙或服务端不兼容时导致代理完全不可达，只有明确测试通过才考虑。</div></div>
+            <div class="setting-row"><div class="setting-name">HTTP3 / QUIC</div><div class="setting-state">保持当前配置</div><div class="setting-note">本配置对代理流量使用 <code>block-quic=all-proxy</code>，让不稳定的代理 UDP/QUIC 回退到 HTTPS/TCP；不需要再叠加“全局禁 QUIC”模块。</div></div>
+            <div class="setting-row"><div class="setting-name">MITM / HTTPS 解密</div><div class="setting-state">关闭</div><div class="setting-note">这四个监测模块、分流、Telegram 和 Zoom 都不需要 MITM。不开证书、不信任自签 CA，可减少证书锁定和隐私风险。</div></div>
+            <div class="setting-row"><div class="setting-name">Rewrite / Body Rewrite</div><div class="setting-state">无需额外开启</div><div class="setting-note">当前模块只使用 Generic Script 和 Panel，不修改 App 请求或响应。不要为了“媒体检测”安装解锁、改区或去广告重写。</div></div>
+            <div class="setting-row"><div class="setting-name">IPv6</div><div class="setting-state">关闭</div><div class="setting-note">当前配置为 <code>ipv6=false</code>、<code>ipv6-vif=off</code>。在 Amy 节点和中国电信路径完成双栈验证前不要改开，避免 IPv4/IPv6 出口不一致。</div></div>
+            <div class="setting-row"><div class="setting-name">Wi-Fi Assist</div><div class="setting-state">开启</div><div class="setting-note">配置已开启，Wi‑Fi 明显失效时允许蜂窝辅助。正式 Telegram/Zoom 通话时仍尽量保持网络不切换。</div></div>
+            <div class="setting-row"><div class="setting-name">Hybrid Network</div><div class="setting-state">默认关闭</div><div class="setting-note">会同时使用 Wi‑Fi 与蜂窝，增加耗电和会话复杂度。只有在固定环境做过对照测试后再单独启用。</div></div>
+            <div class="setting-row"><div class="setting-name">Allow Wi-Fi Access</div><div class="setting-state">关闭</div><div class="setting-note">只有把 Mac 当局域网代理或网关时才临时开启；平时关闭可避免向局域网暴露代理端口。</div></div>
+            <div class="setting-row"><div class="setting-name">VM Gateway / UDP Fast Path</div><div class="setting-state">当前不要开</div><div class="setting-note">这是 Mac 给其他设备做网关的功能，不是本机加速开关。UDP Fast Path 还可能绕过规则与代理策略，不适合当前三端独立运行方案。</div></div>
+            <div class="setting-row"><div class="setting-name">按需连接 / Always On</div><div class="setting-state">稳定后再选</div><div class="setting-note">首次部署和排障时先手动开启，确认无误后再按 Wi‑Fi/蜂窝需求配置按需连接，避免不知道何时自动接管。</div></div>
           </div>
         </section>
 
@@ -452,6 +597,10 @@
             <summary>加密货币策略的边界</summary>
             <p>默认 DIRECT。本配置不判断你的居住地、账户资格或平台条款，也不建议用切换出口的方式规避地区限制。</p>
           </details>
+          <details>
+            <summary>这些建议依据哪些 Surge 官方资料？</summary>
+            <p>模块安装与参数依据 <a href="https://manual.nssurge.com/others/module.html">Module</a>；动态卡片依据 <a href="https://manual.nssurge.com/others/panel.html">Information Panel</a>；一键安装依据 <a href="https://manual.nssurge.com/others/url-scheme.html">URL Scheme</a>；Mac 接管依据 <a href="https://manual.nssurge.com/others/enhanced-mode.html">Enhanced Mode</a>；TFO 保守建议依据 <a href="https://kb.nssurge.com/surge-knowledge-base/technotes/tfo">TCP Fast Open 技术说明</a>。本页只把这些能力组合成适合当前三端和 Amy 节点的操作顺序。</p>
+          </details>
         </section>
       </main>
     </div>
@@ -461,16 +610,43 @@
     </footer>
   </div>
   <script>
+    const copyText = async (value) => {
+      try {
+        await navigator.clipboard.writeText(value);
+        return true;
+      } catch {
+        const textarea = document.createElement('textarea');
+        textarea.value = value;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        const copied = document.execCommand('copy');
+        textarea.remove();
+        return copied;
+      }
+    };
+
     const copyButton = document.querySelector('#copy-url');
     const copyStatus = document.querySelector('#copy-status');
     copyButton?.addEventListener('click', async () => {
       const value = document.querySelector('#managed-url')?.textContent?.trim() || '';
-      try {
-        await navigator.clipboard.writeText(value);
-        copyStatus.textContent = '已复制。请在 Surge 的“从 URL 下载配置”中粘贴。';
-      } catch {
-        copyStatus.textContent = '浏览器未允许自动复制，请长按或选中上方链接复制。';
-      }
+      const copied = await copyText(value);
+      copyStatus.textContent = copied ? '已复制。请在 Surge 的“从 URL 下载配置”中粘贴。' : '复制失败，请长按并手动选择上方链接。';
+    });
+
+    const moduleStatus = document.querySelector('#module-copy-status');
+    document.querySelectorAll('.copy-btn').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const target = document.querySelector(button.dataset.copyTarget || '');
+        const value = target?.textContent?.trim() || '';
+        const original = button.textContent;
+        const copied = value ? await copyText(value) : false;
+        button.textContent = copied ? '已复制' : '复制失败';
+        moduleStatus.textContent = copied ? '模块 URL 已复制，可在 Surge 的模块页面选择“从 URL 安装”。' : '复制失败，请长按模块 URL 手动选择。';
+        window.setTimeout(() => { button.textContent = original; }, 1800);
+      });
     });
   </script>
 </body>

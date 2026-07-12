@@ -128,6 +128,17 @@ https://cheeseher.github.io/Shane-Surge-Config/
 
 完整的策略组用途、切换条件和图标图例见[项目使用说明页](https://cheeseher.github.io/Shane-Surge-Config/#policy)。图标来源与授权见 [`assets/icons/NOTICE.md`](assets/icons/NOTICE.md)，重新生成时运行 `node scripts/generate_policy_icons.mjs`。
 
+## 可选监测模块
+
+四个模块均可在[中文说明页的模块区](https://cheeseher.github.io/Shane-Surge-Config/#modules)一键安装或复制 URL：
+
+- `AI 连通性监测`：检查 ChatGPT、Claude、Grok、Gemini。
+- `订阅流量余额`：通过 DIRECT 读取服务商的 `subscription-userinfo` 响应头；真实订阅 URL 仅填在各设备模块参数中。
+- `媒体连通性监测`：检查 Netflix、YouTube、Disney+、Prime Video、Max、TikTok 的基础可达性。
+- `Shane-Surge 操作手册`：刷新 Panel 后发送可点击通知，在浏览器打开最新说明页。
+
+Information Panel 由 Surge 官方标注为 iOS 功能，因此 Panel 界面主要面向 iPhone/iPad。模块测试结果表示网络连通性，不等于账号资格、片库或地区权益保证。
+
 ## Telegram 语音稳定性
 
 ### 配置保证
