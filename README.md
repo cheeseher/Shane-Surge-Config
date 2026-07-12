@@ -115,6 +115,19 @@ https://cheeseher.github.io/Shane-Surge-Config/
 4. 等待 Surge 自动检查，或在三台设备上对 Managed Profile 执行“立即更新”。
 5. Linked Profile 的 Amy URL 和本地策略选择保留。
 
+## 策略组和图标说明
+
+策略组图标统一为 256 × 256 PNG，由本仓库托管，避免依赖第三方图标 CDN。地区组使用旗帜图片而不是 Emoji；`台湾节点` 按项目约定显示中国国旗。右下角电话角标表示“通话专用单节点组”，不是普通地区浏览组。
+
+| 策略组 | 用途 | 推荐选择 |
+| --- | --- | --- |
+| `香港通话` | 从香港节点中选定一个实际节点，供长连接和通话备用 | 自动测试；通话中不切换 |
+| `新加坡通话` | 从新加坡节点中选定一个实际节点，默认供 Telegram 使用 | 自动测试；通话中不切换 |
+| `电报消息` | Telegram 消息、文件、登录和语音的统一业务入口 | `新加坡通话` |
+| `Zoom会议` | Zoom 登录、语音、视频、共享屏幕和直接 IP 媒体连接 | 中国大陆先用 `DIRECT` |
+
+完整的策略组用途、切换条件和图标图例见[项目使用说明页](https://cheeseher.github.io/Shane-Surge-Config/#policy)。图标来源与授权见 [`assets/icons/NOTICE.md`](assets/icons/NOTICE.md)，重新生成时运行 `node scripts/generate_policy_icons.mjs`。
+
 ## Telegram 语音稳定性
 
 ### 配置保证

@@ -170,6 +170,11 @@
     td { font-size: .92rem; }
     tr:last-child td { border-bottom: 0; }
     td:nth-child(2) { color: var(--accent-strong); font-weight: 700; }
+    .policy-name { display: inline-flex; align-items: center; gap: 10px; min-width: max-content; color: var(--text); font-weight: 700; }
+    .policy-icon { width: 38px; height: 38px; flex: 0 0 38px; border-radius: 10px; box-shadow: 0 3px 10px rgb(20 20 19 / .10); }
+    .legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
+    .legend span { display: inline-flex; align-items: center; gap: 7px; color: var(--text-muted); font-size: .82rem; }
+    .legend .policy-icon { width: 26px; height: 26px; flex-basis: 26px; border-radius: 7px; }
     .checklist { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; counter-reset: steps; }
     .checklist li { counter-increment: steps; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: start; max-width: none; padding: 15px; border: var(--border); border-radius: var(--radius-panel); background: var(--surface); }
     .checklist li::before { content: counter(steps, decimal-leading-zero); color: var(--accent-strong); font: 700 .78rem/34px var(--mono); text-align: center; border-radius: 50%; background: var(--surface-subtle); }
@@ -226,7 +231,7 @@
         <a href="#install">安装链接</a>
         <a href="#architecture">配置架构</a>
         <a href="#deploy">三端部署</a>
-        <a href="#policy">默认策略</a>
+        <a href="#policy">策略组说明</a>
         <a href="#telegram">Telegram</a>
         <a href="#zoom">Zoom</a>
         <a href="#limits">已知限制</a>
@@ -307,23 +312,40 @@
 
         <section id="policy">
           <div class="section-head">
-            <h2>默认策略</h2>
-            <p>平衡模式：保留必要的业务组，不把界面做成策略组墙。</p>
+            <h2>策略组是做什么的</h2>
+            <p>策略组不是“多开几个代理”，而是把不同业务交给合适的出口。图标采用统一圆角和留白；旗帜代表地区，右下角电话角标代表通话专用线路。</p>
           </div>
+          <div class="legend" aria-label="图标含义">
+            <span><img class="policy-icon" src="assets/icons/hong-kong.png" alt="香港节点图标">地区节点</span>
+            <span><img class="policy-icon" src="assets/icons/hong-kong-call.png" alt="香港通话图标">通话专用</span>
+            <span><img class="policy-icon" src="assets/icons/telegram.png" alt="Telegram 图标">业务分流</span>
+          </div>
+          <h3 class="subhead">最容易混淆的四个组</h3>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>策略组</th><th>初始选择</th><th>决策理由</th></tr></thead>
+              <thead><tr><th>策略组</th><th>它控制什么</th><th>最佳配置</th><th>什么时候改</th></tr></thead>
               <tbody>
-                <tr><td>节点选择</td><td>香港节点</td><td>大陆日常低延迟</td></tr>
-                <tr><td>人工智能</td><td>美国节点</td><td>ChatGPT、Claude、Copilot 出口一致</td></tr>
-                <tr><td>谷歌服务</td><td>日本节点</td><td>Google 与 Gemini 使用同一出口</td></tr>
-                <tr><td>电报消息</td><td>新加坡通话</td><td>单实际节点，小波动不换线</td></tr>
-                <tr><td>国际媒体</td><td>美国节点</td><td>美区流媒体优先</td></tr>
-                <tr><td>TikTok</td><td>日本节点</td><td>只做 IP 分流，不做 MITM 换区</td></tr>
-                <tr><td>Zoom会议</td><td>DIRECT</td><td>TCP/UDP 同一出口，不拆分音频与投屏</td></tr>
-                <tr><td>开发服务</td><td>香港节点</td><td>GitHub 与开发资源低延迟</td></tr>
-                <tr><td>苹果 / 微软 / 群晖</td><td>DIRECT</td><td>账户地区不等于全部流量必须代理</td></tr>
-                <tr><td>加密货币</td><td>DIRECT</td><td>不自动伪装地区或切换 IP</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/hong-kong-call.png" alt="">香港通话</span></td><td>只在需要稳定长连接时，从全部香港节点里选定一个实际节点；不是普通香港上网组。</td><td>保持自动测试，不要在通话中手动切换。</td><td>仅当新加坡通话不稳，或实测香港延迟明显更低时选它。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/singapore-call.png" alt="">新加坡通话</span></td><td>与香港通话相同，但限定新加坡节点；主要作为 Telegram 语音的默认出口。</td><td>让它自己选择单个节点，通话前更新一次，通话中不更新。</td><td>UDP Relay Test 全部失败，或出现持续丢包、单向无声时换香港通话并重新拨号。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/telegram.png" alt="">电报消息</span></td><td>控制 Telegram 的消息、文件、登录连接和语音媒体，让它们尽量保持同一出口。</td><td>默认选“新加坡通话”；三端 Telegram 的 Peer-to-Peer 均设为 Nobody。</td><td>只有完整结束当前通话后，才切到“香港通话”再重新拨号。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/zoom.png" alt="">Zoom会议</span></td><td>控制 Zoom 登录、语音、视频、共享屏幕和直接 IP 媒体连接。</td><td>中国大陆先用 DIRECT；Mac 同时开启系统代理和增强模式。</td><td>直连 Statistics 持续超标时，整组切“香港通话”并重新入会，不要只切音频。</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h3 class="subhead">其余常用组的推荐初始值</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>策略组</th><th>初始选择</th><th>用途与注意事项</th></tr></thead>
+              <tbody>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/route.png" alt="">节点选择</span></td><td>香港节点</td><td>未被专门规则命中的日常国际流量；大陆使用优先低延迟。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/openai.png" alt="">人工智能</span></td><td>美国节点</td><td>ChatGPT、Claude 等统一出口；遇到地区限制先更换同地区实际节点。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/google.png" alt="">谷歌服务</span></td><td>日本节点</td><td>Google、Gemini 与相关登录统一出口。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/media.png" alt="">国际媒体</span></td><td>美国节点</td><td>YouTube 与美区流媒体优先；需要其他片库时手动选对应地区。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/linkedin.png" alt="">领英</span></td><td>固定一个实际节点</td><td>登录后减少 IP 漂移；不要选会在后台自动换线的 Smart 组。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/tiktok.png" alt="">TikTok</span></td><td>TikTok日本固定</td><td>选择日本或美国的固定实际节点；这里只做 IP 分流，不安装修改版 App、不做 MITM。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/github.png" alt="">开发服务</span></td><td>香港节点</td><td>GitHub、终端和常用开发资源低延迟访问。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/apple.png" alt="">苹果 / 微软 / 群晖</span></td><td>DIRECT</td><td>美区 Apple ID 不代表所有 Apple 流量都要代理；只有明确失败时单独切换。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/crypto.png" alt="">加密货币</span></td><td>DIRECT</td><td>不自动伪装地区或切换 IP；仅在平台允许的合规使用地区操作。</td></tr>
               </tbody>
             </table>
           </div>
