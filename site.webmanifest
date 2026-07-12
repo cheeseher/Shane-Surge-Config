@@ -1,0 +1,38 @@
+{
+  "id": "/Shane-Surge-Config/",
+  "name": "Shane-Surge 配置说明",
+  "short_name": "Shane-Surge",
+  "description": "iPhone、iPad 与 MacBook 共用的 Surge 中文配置说明和操作手册。",
+  "lang": "zh-CN",
+  "start_url": "/Shane-Surge-Config/",
+  "scope": "/Shane-Surge-Config/",
+  "display": "standalone",
+  "background_color": "#FAF9F5",
+  "theme_color": "#171816",
+  "icons": [
+    {
+      "src": "assets/site-icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/site-icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/site-icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/site-icons/icon-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

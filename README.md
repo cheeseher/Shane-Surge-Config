@@ -139,6 +139,14 @@ https://cheeseher.github.io/Shane-Surge-Config/
 
 Information Panel 由 Surge 官方标注为 iOS 功能，因此 Panel 界面主要面向 iPhone/iPad。模块测试结果表示网络连通性，不等于账号资格、片库或地区权益保证。
 
+## 网站图标与安装体验
+
+网站已配置浏览器标签页/收藏夹 favicon、Apple Touch Icon、Safari 固定标签、Web App Manifest、Android maskable icon、Windows 磁贴与 1200 × 630 社交分享预览图。图标源文件和设计说明见 [`assets/brand/README.md`](assets/brand/README.md)，重新生成全部尺寸时运行：
+
+```bash
+zsh scripts/generate_site_icons.sh
+```
+
 ## Telegram 语音稳定性
 
 ### 配置保证

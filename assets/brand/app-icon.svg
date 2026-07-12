@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="Shane-Surge App">
+  <rect width="1024" height="1024" fill="#171816"/>
+  <rect x="36" y="36" width="952" height="952" rx="198" fill="none" stroke="#FAF9F5" stroke-opacity=".10" stroke-width="12"/>
+  <path d="M736 300C646 208 372 194 306 342C236 500 724 490 680 674C640 838 380 838 278 728" fill="none" stroke="#FAF9F5" stroke-width="116" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="736" cy="300" r="58" fill="#D97757"/>
+  <circle cx="278" cy="728" r="58" fill="#788C5D"/>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Shane-Surge 配置说明">
+  <rect width="1200" height="630" fill="#FAF9F5"/>
+  <rect x="42" y="42" width="1116" height="546" rx="30" fill="#FFFFFF" stroke="#D1CFC5" stroke-width="3"/>
+  <g transform="translate(100 115) scale(.39)">
+    <rect width="1024" height="1024" rx="232" fill="#171816"/>
+    <rect x="28" y="28" width="968" height="968" rx="210" fill="none" stroke="#FAF9F5" stroke-opacity=".12" stroke-width="12"/>
+    <path d="M736 300C646 208 372 194 306 342C236 500 724 490 680 674C640 838 380 838 278 728" fill="none" stroke="#FAF9F5" stroke-width="116" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="736" cy="300" r="58" fill="#D97757"/>
+    <circle cx="278" cy="728" r="58" fill="#788C5D"/>
+  </g>
+  <text x="550" y="245" fill="#141413" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif" font-size="74" font-weight="700">Shane-Surge</text>
+  <text x="550" y="330" fill="#3D3D3A" font-family="'Songti SC','STSong',serif" font-size="58">配置说明</text>
+  <line x1="550" y1="372" x2="1060" y2="372" stroke="#D97757" stroke-width="8" stroke-linecap="round"/>
+  <text x="550" y="430" fill="#77766F" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif" font-size="27">一个链接 · 三台设备 · 持续更新</text>
+</svg>
