@@ -137,7 +137,7 @@ https://cheeseher.github.io/Shane-Surge-Config/
 - `AI 连通性监测`：检查 ChatGPT、Claude、Grok、Gemini、GitHub。
 - `订阅流量余额`：通过 DIRECT 读取服务商的 `subscription-userinfo` 响应头；真实订阅 URL 仅填在各设备模块参数中。
 - `媒体连通性监测`：检查 Netflix、YouTube、Disney+、Prime Video、Max、TikTok 的基础可达性。
-- `Telegram 与 Zoom 通话健康`：读取当前和最近约 20 分钟真实连接，显示 UDP/TCP 路径、基础连通性及当前策略出口。
+- `Telegram 与 Zoom 通话健康`：读取当前和近期（最多约 20 分钟）真实连接，显示 UDP/TCP 路径、基础连通性及当前策略出口。
 - `Shane-Surge 操作手册`：刷新 Panel 后尝试发送可点击通知，在浏览器打开最新说明页；Panel 结果也会显示手册 URL 作为兜底。
 
 Information Panel 由 Surge 官方标注为 iOS 功能，因此 Panel 界面主要面向 iPhone/iPad。模块测试结果表示网络连通性，不等于账号资格、片库或地区权益保证。

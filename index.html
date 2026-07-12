@@ -424,7 +424,7 @@
               <div>
                 <p class="module-kicker">04 / CALL HEALTH</p>
                 <h3>Telegram / Zoom 通话健康</h3>
-                <p>读取 Surge 当前及最近 20 分钟的真实连接，区分 UDP 与 TCP，显示基础连通性、当前策略出口和通话路径风险。应在实际通话保持 10–20 秒后刷新。</p>
+                <p>读取 Surge 当前及近期（最多约 20 分钟）的真实连接，区分 UDP 与 TCP，显示基础连通性、当前策略出口和通话路径风险。应在实际通话保持 10–20 秒后刷新。</p>
                 <code class="module-url" id="module-call-url">https://raw.githubusercontent.com/cheeseher/Shane-Surge-Config/main/modules/call-health.sgmodule</code>
               </div>
               <div class="module-actions">
@@ -464,7 +464,7 @@
             <h3>通话健康模块：什么时候刷新，怎么看</h3>
             <ol class="plain-list">
               <li>先在 Telegram 或 Zoom 建立真实语音/会议，保持 10–20 秒，不要先结束通话。</li>
-              <li>保持通话在后台运行，切回 Surge 的策略页面刷新“通话健康”。模块读取当前和最近约 20 分钟的连接。</li>
+              <li>保持通话在后台运行，切回 Surge 的策略页面刷新“通话健康”。模块读取当前和近期连接，时间窗口最多约 20 分钟；流量很多时可能更短。</li>
               <li>同时确认模块显示的出口符合预期：Telegram 通常为“新加坡通话”，Zoom 在中国大陆通常先用 <code>DIRECT</code>。</li>
             </ol>
             <div class="settings-list" style="margin-top: 12px;">
