@@ -135,9 +135,22 @@ https://cheeseher.github.io/Shane-Surge-Config/
 - `AI 连通性监测`：检查 ChatGPT、Claude、Grok、Gemini。
 - `订阅流量余额`：通过 DIRECT 读取服务商的 `subscription-userinfo` 响应头；真实订阅 URL 仅填在各设备模块参数中。
 - `媒体连通性监测`：检查 Netflix、YouTube、Disney+、Prime Video、Max、TikTok 的基础可达性。
-- `Shane-Surge 操作手册`：刷新 Panel 后发送可点击通知，在浏览器打开最新说明页。
+- `Shane-Surge 操作手册`：刷新 Panel 后尝试发送可点击通知，在浏览器打开最新说明页；Panel 结果也会显示手册 URL 作为兜底。
 
 Information Panel 由 Surge 官方标注为 iOS 功能，因此 Panel 界面主要面向 iPhone/iPad。模块测试结果表示网络连通性，不等于账号资格、片库或地区权益保证。
+
+### 操作手册刷新后没有通知
+
+1. 若 Panel 的内容和时间已经刷新，说明脚本执行正常；没有横幅通常是通知权限被关闭，并非模块失效。
+2. 打开 **iOS 设置 → App（应用）→ Surge → 通知**，开启“允许通知”，并允许横幅和通知中心。
+3. 打开 **Surge → 设置 → 通知**，开启“显示来自脚本的通知”。
+4. 回到策略页面再次刷新“操作手册”，再点击出现的系统通知。仍未出现时，直接复制 Panel 内显示的 `https://cheeseher.github.io/Shane-Surge-Config/` 到 Safari。
+
+### Lucid 下仍显示水果图标
+
+不必把“清除远程图像缓存”当作必做步骤：该入口并非每个 iOS 版本或页面都会显示，有时只在动态资源或已导入图标库的界面中出现。本项目的策略组直接使用 `icon-url`。
+
+先编辑“人工智能”策略组的图标并测试 `https://raw.githubusercontent.com/cheeseher/Shane-Surge-Config/main/assets/icons/openai.png`。若图片可以显示，但切回当前配置仍是水果，说明当前 Linked Profile 保留了旧的本地图标/策略组定义；从最新 Managed Profile 重新创建一个 Linked Profile，只重新填写 Amy 非托管订阅链接，验证后再删除旧配置。
 
 ## 网站图标与安装体验
 
