@@ -3,7 +3,7 @@
 #!category=Shane-Surge
 
 [Panel]
-AI 连通性 = title="AI 连通性", content="点击刷新开始检测", icon=brain.head.profile, icon-color=#D97757, script-name=Shane AI 连通性, update-interval=600
+AI 连通性 = title="AI 连通性", content="◉  ChatGPT       \t      --  ⚪️\n◆  Claude        \t      --  ⚪️\n𝕏  Grok          \t      --  ⚪️\n✦  Gemini        \t      --  ⚪️\n\n点击刷新开始检测", icon=brain.head.profile, icon-color=#D97757, script-name=Shane AI 连通性, update-interval=600
 
 [Script]
 Shane AI 连通性 = type=generic, script-path=https://raw.githubusercontent.com/cheeseher/Shane-Surge-Config/main/scripts/surge/ai-connectivity.js, script-update-interval=86400, timeout=30
