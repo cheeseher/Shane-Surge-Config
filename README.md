@@ -219,21 +219,40 @@ Zoom 官方指定 Meetings/Webinars 主要使用 TCP 443/8801-8802 和 UDP 3478-
 | 谷歌服务 | 日本节点 | Google / Gemini 共用出口 |
 | 电报消息 | 新加坡通话 | 单实际节点，小波动不换线 |
 | 国际媒体 | 美国节点 | 优先美区内容 |
-| TikTok | 日本节点 | 只做 IP 分流，不做 MITM |
+| 领英 | 香港真实节点 | 登录期间固定出口，避免账户 IP 频繁变化 |
+| TikTok | TikTok日本固定 | 进入子组选择一条真实日本节点并长期保持 |
 | Zoom会议 | DIRECT | 整个会议同一出口 |
 | 开发服务 | 香港节点 | GitHub 与开发资源低延迟 |
 | 苹果 / 微软 / 群晖 | DIRECT | 账户地区不等于全部流量必须代理 |
 | 加密货币 | DIRECT | 不自动伪装地区或切换 IP |
 
-## MITM 与 TikTok
+## LinkedIn / 领英
+
+- `领英` 直接列出香港、新加坡和美国的真实节点，不经过 Smart Group。
+- 第一次使用时手动选择一条香港节点，后续保持不变；节点故障时再手动切换。
+- `linkedin.com`、`licdn.com`、`lnkd.in` 等核心域名已内联，外部 LinkedIn 规则集只作为补充。
+- 登录、消息、图片和职位页面统一使用同一个出口，减少账户安全验证和资源加载不完整。
+
+## TikTok：大陆 iPhone 稳定方案
 
 当前不启用 MITM：
 
-- 域名/IP 分流、Smart Group、基础广告拦截不需要 MITM。
-- Telegram 和 Zoom 稳定性不依赖 HTTPS 解密。
-- 不预装过时 TikTok 换区脚本或要求卸载/重装 TikTok。
+- 不安装修改版 TikTok，不使用旧版换区脚本，不解密 TikTok HTTPS。
+- 使用美国或日本 App Store 下载的官方最新版 TikTok。Apple 官方说明，直接修改主 Apple Account 地区可能受余额、订阅、家庭共享和支付方式影响；已有美区账号时直接使用该账号下载更稳妥。
+- TikTok 官方说明，即使关闭定位权限，仍会根据 SIM 卡地区、IP 地址和设备系统设置推断位置。因此“只换代理 IP”无法保证大陆 SIM 环境长期稳定。
 
-TikTok 先仅使用日本/美国 IP 分流。
+### 最稳定的实际组合
+
+1. **首选设备：** 无大陆 SIM 的 Wi-Fi iPad，或关闭中国电信线路后的 iPhone。
+2. **官方 App：** 使用美区账号从 App Store 安装并正常更新，不使用第三方安装包。
+3. **固定出口：** Surge 选择 `TikTok → TikTok日本固定`，再在子组内手动选定一条真实日本节点；使用期间不测速、不切换节点。
+4. **位置权限：** iOS 设置 → 隐私与安全性 → 定位服务 → TikTok → 永不。
+5. **地区信号：** 专用设备可将“语言与地区”设为目标地区；主力手机不必为了 TikTok 频繁修改系统设置。
+6. **失败处理：** 先关闭 TikTok，确认大陆蜂窝线路已停用且固定节点可用，再重新打开；美国固定节点只作为日本节点不可用时的备选。
+
+[TikTok 官方位置说明](https://support.tiktok.com/en/account-and-privacy/account-privacy-settings/location-services-on-tiktok)明确列出 SIM 地区、IP 和设备系统设置均可用于推断位置；[Apple 官方地区说明](https://support.apple.com/zh-cn/118283)列出了更改商店地区前的余额、订阅和支付要求。
+
+如果中国电信线路必须保持开启，配置仍可提供固定日本/美国 IP，但不能承诺 TikTok 始终把设备判定为目标地区。
 
 ## 安全约束
 
