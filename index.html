@@ -388,7 +388,7 @@
               <div>
                 <p class="module-kicker">01 / CONNECTIVITY</p>
                 <h3>AI 连通性监测</h3>
-                <p>分别通过 <code>人工智能</code>、<code>谷歌服务</code> 和 <code>开发服务</code> 策略检测 ChatGPT、Claude、Grok、Gemini、GitHub，显示成功数量和请求延迟。</p>
+                <p>分别通过 <code>人工智能</code>、<code>谷歌服务</code> 和 <code>开发服务</code> 检测 ChatGPT、Claude、Grok、Gemini、GitHub，显示延迟、出口地区、最终实际节点和设备时钟。</p>
                 <code class="module-url" id="module-ai-url">https://raw.githubusercontent.com/cheeseher/Shane-Surge-Config/main/modules/ai-connectivity.sgmodule</code>
               </div>
               <div class="module-actions">
@@ -424,7 +424,7 @@
               <div>
                 <p class="module-kicker">04 / CALL HEALTH</p>
                 <h3>Telegram / Zoom 通话健康</h3>
-                <p>读取 Surge 当前及近期（最多约 20 分钟）的真实连接，区分 UDP 与 TCP，显示基础连通性、当前策略出口和通话路径风险。应在实际通话保持 10–20 秒后刷新。</p>
+                <p>读取 Surge 当前及近期（最多约 20 分钟）的真实连接，区分 UDP 与 TCP，显示基础连通性、最终实际节点和通话路径风险。Amy AnyTLS 可能显示 TCP 回退，应在实际通话保持 10–20 秒后刷新。</p>
                 <code class="module-url" id="module-call-url">https://raw.githubusercontent.com/cheeseher/Shane-Surge-Config/main/modules/call-health.sgmodule</code>
               </div>
               <div class="module-actions">
@@ -465,11 +465,11 @@
             <ol class="plain-list">
               <li>先在 Telegram 或 Zoom 建立真实语音/会议，保持 10–20 秒，不要先结束通话。</li>
               <li>保持通话在后台运行，切回 Surge 的策略页面刷新“通话健康”。模块读取当前和近期连接，时间窗口最多约 20 分钟；流量很多时可能更短。</li>
-              <li>同时确认模块显示的出口符合预期：Telegram 通常为“新加坡通话”，Zoom 在中国大陆通常先用 <code>DIRECT</code>。</li>
+              <li>同时确认模块显示的最终节点符合预期：Telegram 通常为“新加坡通话 › 某条新加坡节点”，Zoom 在中国大陆应为“香港通话 › 某条香港节点”。</li>
             </ol>
             <div class="settings-list" style="margin-top: 12px;">
               <div class="setting-row"><div class="setting-name">UDP + TCP / UDP 活跃</div><div class="setting-state">较理想</div><div class="setting-note">已经观察到 UDP 媒体路径；TCP 通常承担登录、信令或消息。仍需完成双方开麦、静音和共享屏幕实测。</div></div>
-              <div class="setting-row"><div class="setting-name">仅见 TCP</div><div class="setting-state">需确认</div><div class="setting-note">可能只是尚未进入通话，也可能媒体回退到 TCP。保持通话更久后再刷新；若持续如此且有单向无声，应检查 UDP Relay。</div></div>
+              <div class="setting-row"><div class="setting-name">TCP 回退</div><div class="setting-state">需实测</div><div class="setting-note">当前只观察到 TCP，不等于已经断线。Amy 当前全线 AnyTLS，而 Surge 官方 UDP Relay 支持列表未列出 AnyTLS；若同时有单向无声或卡顿，应更换实际节点并完整复测。</div></div>
               <div class="setting-row"><div class="setting-name">等待通话数据</div><div class="setting-state">尚未采集</div><div class="setting-note">基础网站可达，但最近连接中没有识别到 Telegram/Zoom 通话；这不是失败结论。</div></div>
               <div class="setting-row"><div class="setting-name">连接异常</div><div class="setting-state">需要处理</div><div class="setting-note">最近流量出现失败、拒绝或超时，或基础连接失败。先检查当前出口、其他 VPN 和代理节点 UDP 能力。</div></div>
             </div>
@@ -505,7 +505,7 @@
                 <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/hong-kong-call.png" alt="">香港通话</span></td><td>只在需要稳定长连接时，从全部香港节点里选定一个实际节点；不是普通香港上网组。</td><td>保持自动测试，不要在通话中手动切换。</td><td>仅当新加坡通话不稳，或实测香港延迟明显更低时选它。</td></tr>
                 <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/singapore-call.png" alt="">新加坡通话</span></td><td>与香港通话相同，但限定新加坡节点；主要作为 Telegram 语音的默认出口。</td><td>让它自己选择单个节点，通话前更新一次，通话中不更新。</td><td>UDP Relay Test 全部失败，或出现持续丢包、单向无声时换香港通话并重新拨号。</td></tr>
                 <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/telegram.png" alt="">电报消息</span></td><td>控制 Telegram 的消息、文件、登录连接和语音媒体，让它们尽量保持同一出口。</td><td>默认选“新加坡通话”；三端 Telegram 的 Peer-to-Peer 均设为 Nobody。</td><td>只有完整结束当前通话后，才切到“香港通话”再重新拨号。</td></tr>
-                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/zoom.png" alt="">Zoom会议</span></td><td>控制 Zoom 登录、语音、视频、共享屏幕和直接 IP 媒体连接。</td><td>中国大陆先用 DIRECT；Mac 同时开启系统代理和增强模式。</td><td>直连 Statistics 持续超标时，整组切“香港通话”并重新入会，不要只切音频。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/zoom.png" alt="">Zoom会议</span></td><td>控制 Zoom 登录、语音、视频、共享屏幕和直接 IP 媒体连接。</td><td>中国大陆先用“香港通话”；Mac 同时开启系统代理和增强模式。</td><td>香港 Statistics 持续超标时，整组切“新加坡通话”并重新入会；DIRECT 只用于排查。</td></tr>
               </tbody>
             </table>
           </div>
@@ -521,8 +521,8 @@
                 <tr><td>台湾节点</td><td>保持 Smart 自动</td><td>只在明确需要台湾地区出口时使用；图标按项目约定显示中国国旗。</td></tr>
                 <tr><td>自动选择</td><td>仅作故障备用</td><td>跨全部地区智能选择，可能改变出口国家；不要用于 Telegram 通话、LinkedIn、TikTok 或其他敏感账号会话。</td></tr>
                 <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/route.png" alt="">节点选择</span></td><td>香港节点</td><td>未被专门规则命中的日常国际流量；大陆使用优先低延迟。</td></tr>
-                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/openai.png" alt="">人工智能</span></td><td>美国节点</td><td>ChatGPT、Claude、Grok 等统一出口；美国不可用时依次试日本、新加坡，不要在登录过程中频繁换国家。</td></tr>
-                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/google.png" alt="">谷歌服务</span></td><td>日本节点</td><td>Google、Gemini 与相关登录统一出口。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/openai.png" alt="">人工智能</span></td><td>AI美国固定</td><td>ChatGPT、Claude、Grok 等共用一条真实节点；美国不可用时依次试日本、新加坡，不要在登录过程中频繁换国家。</td></tr>
+                <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/google.png" alt="">谷歌服务</span></td><td>AI日本固定</td><td>Google、Gemini 与相关登录共用一条真实节点，避免 Smart 按域名切换出口。</td></tr>
                 <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/media.png" alt="">国际媒体</span></td><td>美国节点</td><td>Netflix、YouTube 与美区流媒体优先；日区内容改日本，新加坡/香港适合一般播放但不保证片库。</td></tr>
                 <tr><td><span class="policy-name"><img class="policy-icon" src="assets/icons/linkedin.png" alt="">领英</span></td><td>固定香港或新加坡实际节点</td><td>登录后减少 IP 漂移；不要选会在后台自动换线的 Smart 组，除非当前实际节点已经失效。</td></tr>
                 <tr><td>TikTok日本固定</td><td>手选一条真实日本节点</td><td>用于日区 TikTok；选好后保持固定，不测速、不在使用过程中更换实际节点。</td></tr>
@@ -547,7 +547,7 @@
           <div class="two-col">
             <div class="callout" data-tone="info">
               <h3>iPhone / iPad 基准</h3>
-              <p>Surge 主开关开启；iOS 的增强接管由系统 VPN 自动完成。不要同时运行其他 VPN。MITM、强制 TFO、局域网共享保持关闭。</p>
+              <p>Surge 主开关开启；iOS 的增强接管由系统 VPN 自动完成。不要同时运行其他 VPN。MITM 与局域网共享保持关闭；Amy 订阅节点的 TFO 已由配置强制关闭。</p>
             </div>
             <div class="callout" data-tone="info">
               <h3>MacBook 基准</h3>
@@ -561,7 +561,7 @@
             <div class="setting-row"><div class="setting-name">Enhanced Mode</div><div class="setting-state">Mac 建议开启</div><div class="setting-note">Zoom、Telegram、终端和不遵循系统代理的流量需要它。若与其他 VPN、AdGuard、Little Snitch 等发生冲突，先关闭冲突软件，不要叠加接管。</div></div>
             <div class="setting-row"><div class="setting-name">其他 VPN</div><div class="setting-state">关闭</div><div class="setting-note">同一时间只让 Surge 接管系统 VPN/网络扩展，否则容易出现路由抢占、DNS 异常或通话断流。</div></div>
             <div class="setting-row"><div class="setting-name">UDP Relay</div><div class="setting-state">节点必须支持</div><div class="setting-note">不是“盲目打开”的加速开关。对香港/新加坡候选节点执行 Proxy UDP Relay Test；不支持时本配置会 REJECT，避免 Telegram/Zoom 偷跑直连。</div></div>
-            <div class="setting-row"><div class="setting-name">TCP Fast Open / TFO</div><div class="setting-state">不要强制开启</div><div class="setting-note">保持系统自动或节点默认。官方说明强制 TFO 可能在路由器、防火墙或服务端不兼容时导致代理完全不可达，只有明确测试通过才考虑。</div></div>
+            <div class="setting-row"><div class="setting-name">TCP Fast Open / TFO</div><div class="setting-state">已强制关闭</div><div class="setting-note">Amy 官方要求 AnyTLS 客户端关闭 TFO；本配置已通过 <code>external-policy-modifier="tfo=false"</code> 覆盖订阅节点，不需要在三台设备逐条修改。</div></div>
             <div class="setting-row"><div class="setting-name">HTTP3 / QUIC</div><div class="setting-state">保持当前配置</div><div class="setting-note">本配置对代理流量使用 <code>block-quic=all-proxy</code>，让不稳定的代理 UDP/QUIC 回退到 HTTPS/TCP；不需要再叠加“全局禁 QUIC”模块。</div></div>
             <div class="setting-row"><div class="setting-name">MITM / HTTPS 解密</div><div class="setting-state">关闭</div><div class="setting-note">这五个模块、分流、Telegram 和 Zoom 都不需要 MITM。不开证书、不信任自签 CA，可减少证书锁定和隐私风险。</div></div>
             <div class="setting-row"><div class="setting-name">Rewrite / Body Rewrite</div><div class="setting-state">无需额外开启</div><div class="setting-note">当前模块只使用 Generic Script 和 Panel，不修改 App 请求或响应。不要为了“媒体检测”安装解锁、改区或去广告重写。</div></div>
@@ -613,7 +613,7 @@
         <section id="zoom">
           <div class="section-head">
             <h2>Zoom：语音、视频与共享屏幕</h2>
-            <p>整个会议统一走 <code>Zoom会议</code>；默认 DIRECT，只有实测直连质量差时才把整组切到香港通话。</p>
+            <p>整个会议统一走 <code>Zoom会议</code>；中国大陆默认“香港通话”。直连可能可以入会，但无法开启或稳定维持共享屏幕，因此 DIRECT 只保留为诊断备选。</p>
           </div>
           <div class="callout" data-tone="info">
             <h3>为什么不能只代理一部分</h3>
@@ -622,7 +622,7 @@
           <h3 class="subhead">Mac 会前设置</h3>
           <ul class="plain-list">
             <li>Surge 开启 <code>Set as System Proxy</code> 与 <code>Enhanced Mode</code>，确保 Zoom 的 UDP 与直接 IP 媒体连接被接管。</li>
-            <li><code>Zoom会议</code> 先保持 DIRECT；关闭其他 VPN、代理和可能接管网络的安全软件。</li>
+            <li><code>Zoom会议</code> 保持“香港通话”，确认已落到一条真实香港节点；关闭其他 VPN、代理和可能接管网络的安全软件。</li>
             <li>先进入 Zoom 测试会议，检查麦克风、扬声器和摄像头，再开始正式会议。</li>
             <li>共享带声音的网页或视频时，在 Share Screen 面板勾选 <strong>Share sound / 共享声音</strong>；这不是 Surge 分流选项。</li>
           </ul>
@@ -646,9 +646,9 @@
               <thead><tr><th>现象</th><th>判断</th><th>处理</th></tr></thead>
               <tbody>
                 <tr><td>投屏后对方听不到共享内容</td><td>通常不是网络分流</td><td>重新共享并勾选 Share sound；若只是麦克风无声，再检查 Zoom 输入设备与系统麦克风权限。</td></tr>
-                <tr><td>双方偶发听不到彼此</td><td>先看 Statistics</td><td>若延迟、抖动或丢包超标，把整个 <code>Zoom会议</code> 从 DIRECT 切到香港通话后重新入会；不要只改单条 UDP 规则。</td></tr>
+                <tr><td>双方偶发听不到彼此</td><td>先看 Statistics 与通话健康模块</td><td>若延迟、抖动或丢包超标，把整个 <code>Zoom会议</code> 从香港通话切到新加坡通话后重新入会；不要只改单条 UDP 规则。</td></tr>
                 <tr><td>共享屏幕时明显卡顿</td><td>上行带宽或 Wi‑Fi 干扰</td><td>靠近路由器、切 5/6 GHz 或有线网络，暂停云同步；不要边开会边测速。</td></tr>
-                <tr><td>切到代理反而更差</td><td>代理绕路或节点拥塞</td><td>恢复 DIRECT。稳定优先于“必须代理”，以同一测试脚本和 Statistics 数据做决定。</td></tr>
+                <tr><td>香港、新加坡都卡顿</td><td>节点拥塞或 AnyTLS TCP 回退</td><td>逐条更换实际节点并复测。DIRECT 只用于判断是否为代理路径问题，不作为大陆共享屏幕方案。</td></tr>
               </tbody>
             </table>
           </div>
@@ -677,7 +677,7 @@
           </details>
           <details>
             <summary>这些建议依据哪些 Surge 官方资料？</summary>
-            <p>模块安装与参数依据 <a href="https://manual.nssurge.com/others/module.html">Module</a>；动态卡片依据 <a href="https://manual.nssurge.com/others/panel.html">Information Panel</a>；一键安装依据 <a href="https://manual.nssurge.com/others/url-scheme.html">URL Scheme</a>；Mac 接管依据 <a href="https://manual.nssurge.com/others/enhanced-mode.html">Enhanced Mode</a>；TFO 保守建议依据 <a href="https://kb.nssurge.com/surge-knowledge-base/technotes/tfo">TCP Fast Open 技术说明</a>。本页只把这些能力组合成适合当前三端和 Amy 节点的操作顺序。</p>
+            <p>模块安装与参数依据 <a href="https://manual.nssurge.com/others/module.html">Module</a>；动态卡片依据 <a href="https://manual.nssurge.com/others/panel.html">Information Panel</a>；Mac 接管依据 <a href="https://manual.nssurge.com/others/enhanced-mode.html">Enhanced Mode</a>；固定 AI 出口依据 <a href="https://kb.nssurge.com/surge-knowledge-base/guidelines/smart-group">Smart Group 指南</a>；协议与 UDP 能力依据 <a href="https://manual.nssurge.com/policy/proxy.html">代理协议说明</a>；AI 域名依据 <a href="https://help.openai.com/en/articles/9247338-network-recommendations-for-chatgpt-errors-on-web-and-apps">OpenAI 网络建议</a>；AnyTLS 与关闭 TFO 依据 <a href="https://www.amytele.com/">Amy 官方公告</a>。本页只把这些能力组合成适合当前三端和 Amy 节点的操作顺序。</p>
           </details>
         </section>
       </main>

@@ -1,0 +1,45 @@
+name: Update official network rules
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 3 * * 1"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Refresh official IP rules
+        run: node scripts/update_official_network_rules.mjs
+
+      - name: Validate Surge configuration
+        run: |
+          test "$(grep -c '^# BEGIN AUTO-UPDATE:' By-Shane.conf)" -eq 2
+          test "$(grep -c '^# END AUTO-UPDATE:' By-Shane.conf)" -eq 2
+          git diff --check
+
+      - name: Open or update review pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: automation/update-official-network-rules
+          delete-branch: true
+          commit-message: "chore: 更新 OpenAI 与 Zoom 官方网络规则"
+          title: "chore: 更新 OpenAI 与 Zoom 官方网络规则"
+          body: |
+            自动同步官方发布的 ChatGPT Voice 与 Zoom Meetings IP 范围。
+
+            - 来源：OpenAI ChatGPT Voice JSON
+            - 来源：Zoom Meetings IPv4 / IPv6 文档
+            - 合并前请确认 Surge 配置检查通过

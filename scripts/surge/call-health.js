@@ -19,6 +19,26 @@ function api(method, path, body = null) {
   });
 }
 
+async function resolvePolicy(group) {
+  let current = group;
+  const path = [];
+  const visited = new Set();
+
+  for (let depth = 0; depth < 4; depth += 1) {
+    if (!current || visited.has(current)) break;
+    visited.add(current);
+    path.push(current);
+    const payload = await api(
+      "GET",
+      `/v1/policy_groups/select?group_name=${encodeURIComponent(current)}`,
+    );
+    const next = payload.policy || payload.selected || payload.selection;
+    if (!next || next === current) break;
+    current = next;
+  }
+  return path.slice(1).join(" › ") || current || "未知";
+}
+
 function probe(service) {
   return new Promise((resolve) => {
     const started = Date.now();
@@ -115,7 +135,7 @@ function classify(traffic, basicReachable) {
     return { label: "UDP 活跃", symbol: "✓", level: 0, kind: "good" };
   }
   if (traffic.tcp) {
-    return { label: "仅见 TCP", symbol: "!", level: 1, kind: "warn" };
+    return { label: "TCP 回退", symbol: "!", level: 1, kind: "warn" };
   }
   if (!basicReachable) {
     return { label: "基础连接失败", symbol: "✕", level: 2, kind: "bad" };
@@ -149,8 +169,8 @@ function formatRow(name, state) {
   const [telegramProbe, zoomProbe, telegramPolicy, zoomPolicy] = await Promise.all([
     probe(services[0]),
     probe(services[1]),
-    api("GET", `/v1/policy_groups/select?group_name=${encodeURIComponent(services[0].group)}`),
-    api("GET", `/v1/policy_groups/select?group_name=${encodeURIComponent(services[1].group)}`),
+    resolvePolicy(services[0].group),
+    resolvePolicy(services[1].group),
   ]);
 
   const probes = [telegramProbe, zoomProbe];
@@ -175,15 +195,13 @@ function formatRow(name, state) {
     iconColor = "#788C5D";
   }
 
-  const policies = [
-    telegramPolicy.policy || "未知",
-    zoomPolicy.policy || "未知",
-  ];
+  const policies = [telegramPolicy, zoomPolicy];
   const basicSymbol = basicCount === services.length ? "✓" : (basicCount === 0 ? "✕" : "!");
   const lines = states.map((state, index) => formatRow(services[index].name, state));
   lines.push(`基础连接：${basicCount}/${services.length}  ${basicSymbol}`);
   lines.push(`出口：TG ${policies[0]} · Zoom ${policies[1]}`);
   lines.push("通话中保持 10–20 秒后刷新。");
+  lines.push("TCP 回退不等于断线；请以双向语音实测为准。");
 
   $done({
     title: `通话路径 · ${titleState}`,
