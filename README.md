@@ -137,7 +137,7 @@ https://cheeseher.github.io/Shane-Surge-Config/
 
 五个模块均可在[中文说明页的模块区](https://cheeseher.github.io/Shane-Surge-Config/#modules)一键安装或复制 URL：
 
-- `AI 连通性监测`：检查 ChatGPT、Claude、Grok、Gemini、GitHub，并显示延迟、出口地区、最终实际节点和设备时钟。
+- `AI 连通性监测`：检查 ChatGPT、Codex CLI、Claude、Grok、Gemini、Gemini CLI、GitHub，并显示延迟、出口地区、最终实际节点和设备时钟；CLI 项只证明服务端点可达，不代表账号权限。
 - `订阅流量余额`：通过 DIRECT 读取服务商的 `subscription-userinfo` 响应头；真实订阅 URL 仅填在各设备模块参数中。
 - `媒体连通性监测`：检查 Netflix、YouTube、Disney+、Prime Video、Max、TikTok 的基础可达性。
 - `Telegram 与 Zoom 通话健康`：读取当前和近期（最多约 20 分钟）真实连接，显示 UDP/TCP 路径、基础连通性及当前策略出口。

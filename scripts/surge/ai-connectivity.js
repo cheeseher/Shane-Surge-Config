@@ -7,6 +7,12 @@ const services = [
     supportedRegions: ["US", "JP", "SG", "TW"],
   },
   {
+    name: "Codex CLI",
+    url: "https://chatgpt.com/backend-api/codex",
+    policy: "人工智能",
+    reachableStatuses: [401, 403, 404],
+  },
+  {
     name: "Claude",
     url: "https://claude.ai/cdn-cgi/trace",
     policy: "人工智能",
@@ -26,6 +32,12 @@ const services = [
     regionUrl: "https://www.cloudflare.com/cdn-cgi/trace",
     policy: "谷歌服务",
     supportedRegions: ["US", "JP", "SG", "TW", "HK"],
+  },
+  {
+    name: "Gemini CLI",
+    url: "https://cloudcode-pa.googleapis.com/",
+    policy: "谷歌服务",
+    reachableStatuses: [400, 401, 403, 404],
   },
   {
     name: "GitHub",
@@ -79,9 +91,14 @@ function parseRegion(body) {
   return match ? match[1] : "";
 }
 
-function classify(result) {
+function classify(service, result) {
   if (!result.error && result.status >= 200 && result.status < 400) {
     return { kind: "good", label: "正常", symbol: "✓" };
+  }
+  if (!result.error
+    && service.reachableStatuses
+    && service.reachableStatuses.includes(result.status)) {
+    return { kind: "good", label: "端点可达", symbol: "✓" };
   }
   if (!result.error && (result.status === 403 || result.status === 451)) {
     return { kind: "warn", label: `受限 ${result.status}`, symbol: "!" };
@@ -111,13 +128,14 @@ async function resolvePolicy(group) {
 }
 
 function formatService(service, result) {
-  const state = classify(result);
+  const state = classify(service, result);
   const region = result.region
     ? `${regionNames[result.region] || result.region}${result.regionSupported ? "" : "?"} · `
     : "";
+  const reachable = state.label === "端点可达" ? " · 端点可达" : "";
   const detail = state.kind === "bad"
     ? state.label
-    : `${region}${result.latency} ms${state.kind === "warn" ? ` · ${state.label}` : ""}`;
+    : `${region}${result.latency} ms${reachable}${state.kind === "warn" ? ` · ${state.label}` : ""}`;
   return `${service.name.padEnd(10, " ")}\t${detail}\t${state.symbol}`;
 }
 
@@ -146,7 +164,7 @@ function formatService(service, result) {
     resolvePolicy("谷歌服务"),
   ]);
 
-  const states = checks.map(classify);
+  const states = checks.map((result, index) => classify(services[index], result));
   const goodCount = states.filter((state) => state.kind === "good").length;
   const badCount = states.filter((state) => state.kind === "bad").length;
   const unsupportedCount = checks.filter((result) => result.region && !result.regionSupported).length;
